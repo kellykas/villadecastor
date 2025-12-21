@@ -54,9 +54,14 @@ export default {
   				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
   				accent: 'hsl(var(--sidebar-accent))',
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-  				border: 'hsl(var(--sidebar-border))',
-  				ring: 'hsl(var(--sidebar-ring))'
-  			}
+				border: 'hsl(var(--sidebar-border))',
+				ring: 'hsl(var(--sidebar-ring))'
+			},
+			construction: {
+				DEFAULT: 'hsl(var(--construction))',
+				dark: 'hsl(var(--construction-dark))'
+			},
+			steel: 'hsl(var(--steel))'
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
