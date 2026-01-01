@@ -1,4 +1,4 @@
-import { Award, Target, Eye, Heart, Users, Building, Clock, Shield } from 'lucide-react';
+import { Award, Target, Eye, Heart, Users, Building, Clock, Shield, MapPin, FileCheck } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import MainLayout from '@/components/layout/MainLayout';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -20,23 +20,23 @@ const About = () => {
   ];
 
   const stats = [
-    { value: '25+', label: t('about.experience') },
-    { value: '500+', label: t('about.projects_completed') },
-    { value: '50+', label: t('about.team_members') },
+    { value: '10+', label: t('about.experience') },
+    { value: '200+', label: t('about.projects_completed') },
+    { value: '30+', label: t('about.team_members') },
     { value: '98%', label: t('about.satisfaction') },
   ];
 
   const missionContent = language === 'fr' 
-    ? 'Notre mission est de livrer des projets de construction et de rénovation exceptionnels qui dépassent les attentes de nos clients, tout en maintenant les normes les plus élevées de sécurité, de qualité et de durabilité environnementale.'
-    : 'Our mission is to deliver exceptional construction and renovation projects that exceed our clients\' expectations while maintaining the highest standards of safety, quality, and environmental sustainability.';
+    ? 'Notre mission est de livrer des projets de construction et de rénovation exceptionnels qui dépassent les attentes de nos clients, tout en maintenant les normes les plus élevées de sécurité, de qualité et de durabilité.'
+    : 'Our mission is to deliver exceptional construction and renovation projects that exceed our clients\' expectations while maintaining the highest standards of safety, quality, and sustainability.';
 
   const visionContent = language === 'fr'
-    ? 'Être le leader reconnu de l\'industrie de la construction, réputé pour notre innovation, notre fiabilité et notre engagement indéfectible envers l\'excellence dans chaque projet que nous entreprenons.'
-    : 'To be the recognized leader in the construction industry, renowned for our innovation, reliability, and unwavering commitment to excellence in every project we undertake.';
+    ? 'Être le leader reconnu de l\'industrie de la construction en RDC, réputé pour notre innovation, notre fiabilité et notre engagement indéfectible envers l\'excellence.'
+    : 'To be the recognized leader in the construction industry in DRC, renowned for our innovation, reliability, and unwavering commitment to excellence.';
 
   const aboutText = language === 'fr'
-    ? 'Fondée en 1998, BuildPro Construction s\'est développée pour devenir l\'une des entreprises de construction les plus fiables de la région. Avec plus de deux décennies d\'expérience, nous avons réussi à réaliser des centaines de projets résidentiels et commerciaux, gagnant la confiance de nos clients grâce à notre dévouement à un savoir-faire de qualité et à un service exceptionnel.'
-    : 'Founded in 1998, BuildPro Construction has grown to become one of the most trusted construction companies in the region. With over two decades of experience, we have successfully completed hundreds of residential and commercial projects, earning the trust of our clients through our dedication to quality craftsmanship and exceptional service.';
+    ? 'Villa de Castor est une entreprise de construction et rénovation basée en République Démocratique du Congo. Avec plus d\'une décennie d\'expérience, nous avons réussi à réaliser des centaines de projets résidentiels et commerciaux à Kinshasa et Lubumbashi, gagnant la confiance de nos clients grâce à notre dévouement à un savoir-faire de qualité et à un service exceptionnel.'
+    : 'Villa de Castor is a construction and renovation company based in the Democratic Republic of Congo. With over a decade of experience, we have successfully completed hundreds of residential and commercial projects in Kinshasa and Lubumbashi, earning the trust of our clients through our dedication to quality craftsmanship and exceptional service.';
 
   const experienceText = language === 'fr'
     ? 'Notre équipe de professionnels qualifiés apporte une expertise dans tous les aspects de la construction, des fondations aux finitions. Nous nous engageons à utiliser les dernières techniques et technologies pour assurer l\'efficacité, la sécurité et la durabilité de chaque projet.'
@@ -51,9 +51,9 @@ const About = () => {
             {t('about.title')}
           </h1>
           <p className="text-lg text-secondary-foreground/80 max-w-2xl mx-auto">
-            {language === 'fr' 
-              ? 'Construire l\'excellence depuis 1998'
-              : 'Building excellence since 1998'}
+            Villa de Castor - {language === 'fr' 
+              ? 'Construire l\'excellence en RDC'
+              : 'Building excellence in DRC'}
           </p>
         </div>
       </section>
@@ -66,12 +66,12 @@ const About = () => {
               <div className="aspect-[4/3] rounded-lg overflow-hidden">
                 <img 
                   src={heroImage}
-                  alt="BuildPro team" 
+                  alt="Villa de Castor team" 
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="absolute -bottom-6 -right-6 bg-primary text-primary-foreground p-6 rounded-lg shadow-lg hidden md:block">
-                <div className="text-3xl font-bold">1998</div>
+                <div className="text-3xl font-bold">2014</div>
                 <div className="text-sm">{language === 'fr' ? 'Fondée' : 'Founded'}</div>
               </div>
             </div>
@@ -82,9 +82,29 @@ const About = () => {
               <p className="text-muted-foreground leading-relaxed mb-6">
                 {aboutText}
               </p>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-muted-foreground leading-relaxed mb-6">
                 {experienceText}
               </p>
+              
+              {/* DRC-specific credentials */}
+              <div className="space-y-3 p-4 bg-muted rounded-lg">
+                <div className="flex items-center gap-3">
+                  <MapPin className="w-5 h-5 text-primary flex-shrink-0" />
+                  <span className="text-foreground font-medium">
+                    {language === 'fr' ? 'Zones d\'intervention : Kinshasa & Lubumbashi' : 'Service areas: Kinshasa & Lubumbashi'}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <FileCheck className="w-5 h-5 text-primary flex-shrink-0" />
+                  <span className="text-foreground font-medium">
+                    {language === 'fr' ? 'Entreprise légalement enregistrée' : 'Legally registered company'}
+                  </span>
+                </div>
+                <div className="pl-8 text-sm text-muted-foreground">
+                  <p>RCCM: XX-XXXXX-XXXXX-X</p>
+                  <p>ID NAT: X-XXX-XXXXX-X</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

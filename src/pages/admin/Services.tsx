@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import AdminLayout from '@/components/admin/AdminLayout';
+import ImageUpload from '@/components/admin/ImageUpload';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -156,20 +157,21 @@ const Services = () => {
             <DialogTrigger asChild>
               <Button><Plus className="w-4 h-4 mr-2" />Add Service</Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl">
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>{editingId ? 'Edit Service' : 'Add Service'}</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Image URL</Label>
-                    <Input value={formData.image_url} onChange={(e) => setFormData({ ...formData, image_url: e.target.value })} placeholder="https://..." />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Display Order</Label>
-                    <Input type="number" value={formData.display_order} onChange={(e) => setFormData({ ...formData, display_order: parseInt(e.target.value) || 0 })} />
-                  </div>
+                <ImageUpload 
+                  bucket="services-images"
+                  currentUrl={formData.image_url}
+                  onUpload={(url) => setFormData({ ...formData, image_url: url })}
+                  onRemove={() => setFormData({ ...formData, image_url: '' })}
+                />
+                
+                <div className="space-y-2">
+                  <Label>Display Order</Label>
+                  <Input type="number" value={formData.display_order} onChange={(e) => setFormData({ ...formData, display_order: parseInt(e.target.value) || 0 })} />
                 </div>
                 <div className="flex items-center justify-between">
                   <Label>Active</Label>
@@ -227,6 +229,7 @@ const Services = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead className="w-[60px]">Image</TableHead>
                     <TableHead>Order</TableHead>
                     <TableHead>Title (EN)</TableHead>
                     <TableHead>Status</TableHead>
@@ -238,6 +241,13 @@ const Services = () => {
                     const enTrans = service.service_translations?.find((t: any) => t.language === 'en');
                     return (
                       <TableRow key={service.id}>
+                        <TableCell>
+                          {service.image_url ? (
+                            <img src={service.image_url} alt="" className="w-12 h-12 object-cover rounded" />
+                          ) : (
+                            <div className="w-12 h-12 bg-muted rounded flex items-center justify-center text-muted-foreground text-xs">No img</div>
+                          )}
+                        </TableCell>
                         <TableCell>{service.display_order}</TableCell>
                         <TableCell className="font-medium">{enTrans?.title || 'Untitled'}</TableCell>
                         <TableCell>
