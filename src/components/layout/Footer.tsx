@@ -24,7 +24,7 @@ const Footer = () => {
               <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
                 <HardHat className="w-6 h-6 text-primary-foreground" />
               </div>
-              <span className="text-xl font-bold">BuildPro</span>
+              <span className="text-xl font-bold">Villa de Castor</span>
             </Link>
             <p className="text-secondary-foreground/80 text-sm leading-relaxed">
               {t('footer.description')}
@@ -111,7 +111,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-secondary-foreground/10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-secondary-foreground/60">
-            <p>© {new Date().getFullYear()} BuildPro Construction. {t('footer.copyright')}</p>
+            <p>© {new Date().getFullYear()} Villa de Castor. {t('footer.copyright')}</p>
             <div className="flex gap-6">
               <a href="#" className="hover:text-primary transition-colors">Privacy Policy</a>
               <a href="#" className="hover:text-primary transition-colors">Terms of Service</a>
