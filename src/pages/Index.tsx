@@ -7,10 +7,9 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import heroImage from '@/assets/hero-construction.jpg';
+import { COMPANY_NAME, getWhatsAppUrl } from '@/lib/constants';
 
 const serviceIcons = [Building2, Hammer, Wrench, PaintBucket, HomeIcon];
-
-const WHATSAPP_NUMBER = '+243000000000'; // Replace with actual number
 
 const Index = () => {
   const { t, language } = useLanguage();
@@ -74,7 +73,7 @@ const Index = () => {
     const message = language === 'fr' 
       ? 'Bonjour, je souhaite obtenir des informations sur vos services.'
       : 'Hello, I would like to get information about your services.';
-    window.open(`https://wa.me/${WHATSAPP_NUMBER.replace(/\+/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(getWhatsAppUrl(message), '_blank');
   };
 
   return (
@@ -91,7 +90,7 @@ const Index = () => {
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-2xl">
             <p className="text-primary font-semibold text-lg mb-3">
-              Villa de Castor
+              {COMPANY_NAME}
             </p>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-secondary-foreground mb-4 leading-tight">
               {t('hero.slogan') || (language === 'fr' ? 'Construction, rénovation & décoration intérieure en RDC' : 'Construction, renovation & interior design in DRC')}
@@ -168,7 +167,7 @@ const Index = () => {
               <div className="aspect-[4/3] rounded-lg overflow-hidden bg-muted">
                 <img 
                   src={heroImage}
-                  alt="Villa de Castor team" 
+                  alt={`${COMPANY_NAME} team`}
                   className="w-full h-full object-cover"
                 />
               </div>

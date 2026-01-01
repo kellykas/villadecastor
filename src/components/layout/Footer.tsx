@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
-import { HardHat, Mail, Phone, MapPin, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
+import { HardHat, Mail, Phone, MapPin, Facebook, Instagram, Linkedin, Twitter, MessageCircle } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { COMPANY_NAME, WHATSAPP_DISPLAY, COMPANY_EMAIL, getWhatsAppUrl } from '@/lib/constants';
 
 const Footer = () => {
   const { t } = useLanguage();
@@ -24,7 +25,7 @@ const Footer = () => {
               <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
                 <HardHat className="w-6 h-6 text-primary-foreground" />
               </div>
-              <span className="text-xl font-bold">Villa de Castor</span>
+              <span className="text-xl font-bold">{COMPANY_NAME}</span>
             </Link>
             <p className="text-secondary-foreground/80 text-sm leading-relaxed">
               {t('footer.description')}
@@ -69,21 +70,17 @@ const Footer = () => {
               <li className="flex items-start gap-3 text-sm">
                 <MapPin className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                 <span className="text-secondary-foreground/80">
-                  123 Construction Avenue<br />
-                  Montreal, QC H1A 1A1
+                  Kinshasa, RDC<br />
+                  Lubumbashi, RDC
                 </span>
               </li>
               <li className="flex items-center gap-3 text-sm">
                 <Phone className="w-5 h-5 text-primary shrink-0" />
-                <a href="tel:+15141234567" className="text-secondary-foreground/80 hover:text-primary transition-colors">
-                  +1 (514) 123-4567
-                </a>
+                <span className="text-secondary-foreground/80">{WHATSAPP_DISPLAY}</span>
               </li>
               <li className="flex items-center gap-3 text-sm">
                 <Mail className="w-5 h-5 text-primary shrink-0" />
-                <a href="mailto:info@buildpro.com" className="text-secondary-foreground/80 hover:text-primary transition-colors">
-                  info@buildpro.com
-                </a>
+                <span className="text-secondary-foreground/80">{COMPANY_EMAIL}</span>
               </li>
             </ul>
           </div>
@@ -111,7 +108,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-secondary-foreground/10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-secondary-foreground/60">
-            <p>© {new Date().getFullYear()} Villa de Castor. {t('footer.copyright')}</p>
+            <p>© {new Date().getFullYear()} {COMPANY_NAME}. {t('footer.copyright')}</p>
             <div className="flex gap-6">
               <a href="#" className="hover:text-primary transition-colors">Privacy Policy</a>
               <a href="#" className="hover:text-primary transition-colors">Terms of Service</a>

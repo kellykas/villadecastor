@@ -19,6 +19,7 @@ import MainLayout from '@/components/layout/MainLayout';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { COMPANY_NAME, COMPANY_EMAIL, WHATSAPP_DISPLAY, getWhatsAppUrl } from '@/lib/constants';
 
 const contactSchema = z.object({
   name: z.string().min(2, 'Name is required').max(100),
@@ -69,28 +70,35 @@ const Contact = () => {
     }
   };
 
+  const handleWhatsApp = () => {
+    const message = language === 'fr' 
+      ? 'Bonjour, je souhaite vous contacter.'
+      : 'Hello, I would like to contact you.';
+    window.open(getWhatsAppUrl(message), '_blank');
+  };
+
   const contactInfo = [
     {
       icon: MapPin,
-      title: t('contact.address'),
-      lines: ['123 Construction Avenue', 'Montreal, QC H1A 1A1'],
+      title: language === 'fr' ? 'Adresse' : 'Address',
+      lines: ['Kinshasa, RDC', 'Lubumbashi, RDC'],
     },
     {
       icon: Phone,
-      title: t('contact.phone'),
-      lines: ['+1 (514) 123-4567', '+1 (514) 765-4321'],
+      title: language === 'fr' ? 'Téléphone' : 'Phone',
+      lines: [WHATSAPP_DISPLAY],
     },
     {
       icon: Mail,
       title: 'Email',
-      lines: ['info@buildpro.com', 'quotes@buildpro.com'],
+      lines: [COMPANY_EMAIL],
     },
     {
       icon: Clock,
-      title: t('contact.hours'),
+      title: language === 'fr' ? 'Horaires' : 'Hours',
       lines: [
         language === 'fr' ? 'Lun-Ven: 8h - 18h' : 'Mon-Fri: 8AM - 6PM',
-        language === 'fr' ? 'Sam: 9h - 16h' : 'Sat: 9AM - 4PM',
+        language === 'fr' ? 'Sam: 9h - 14h' : 'Sat: 9AM - 2PM',
       ],
     },
   ];
@@ -136,27 +144,25 @@ const Contact = () => {
               </div>
 
               {/* WhatsApp Button */}
-              <a
-                href="https://wa.me/15141234567"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors"
+              <Button
+                className="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white mb-8"
+                onClick={handleWhatsApp}
               >
-                <MessageCircle className="w-5 h-5" />
+                <MessageCircle className="w-5 h-5 mr-2" />
                 {language === 'fr' ? 'Contactez-nous sur WhatsApp' : 'Contact us on WhatsApp'}
-              </a>
+              </Button>
 
-              {/* Map */}
-              <div className="mt-8 aspect-video rounded-lg overflow-hidden bg-muted">
+              {/* Map - Kinshasa */}
+              <div className="aspect-video rounded-lg overflow-hidden bg-muted">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d178787.89915717835!2d-73.68248877961808!3d45.55980891908442!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4cc91a541c64b70d%3A0x654e3138211fefef!2sMontreal%2C%20QC%2C%20Canada!5e0!3m2!1sen!2sus!4v1702000000000!5m2!1sen!2sus"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d254747.51837626!2d15.207686!3d-4.3217055!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1a6a30e7e9f7e8bf%3A0x4c6b5e0c70c5c2c5!2sKinshasa%2C%20Democratic%20Republic%20of%20the%20Congo!5e0!3m2!1sen!2sus!4v1702000000000!5m2!1sen!2sus"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="BuildPro Location"
+                  title={`${COMPANY_NAME} Location`}
                 />
               </div>
             </div>
