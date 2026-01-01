@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 import { HardHat, Mail, Phone, MapPin, Facebook, Instagram, Linkedin, Twitter, MessageCircle } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { COMPANY_NAME, WHATSAPP_DISPLAY, COMPANY_EMAIL, getWhatsAppUrl } from '@/lib/constants';
+import { COMPANY_NAME, WHATSAPP_DISPLAY, COMPANY_EMAIL, COMPANY_ADDRESS, getWhatsAppUrl } from '@/lib/constants';
 
 const Footer = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const quickLinks = [
     { href: '/', label: t('nav.home') },
@@ -70,8 +70,9 @@ const Footer = () => {
               <li className="flex items-start gap-3 text-sm">
                 <MapPin className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                 <span className="text-secondary-foreground/80">
-                  Kinshasa, RDC<br />
-                  Lubumbashi, RDC
+                  {COMPANY_ADDRESS.street}<br />
+                  {COMPANY_ADDRESS.building}<br />
+                  {COMPANY_ADDRESS.city}, {COMPANY_ADDRESS.country}
                 </span>
               </li>
               <li className="flex items-center gap-3 text-sm">
@@ -90,16 +91,16 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">{t('contact.hours')}</h3>
             <ul className="space-y-2 text-sm text-secondary-foreground/80">
               <li className="flex justify-between">
-                <span>Monday - Friday</span>
-                <span>8:00 AM - 6:00 PM</span>
+                <span>{language === 'fr' ? 'Lun - Ven' : 'Mon - Fri'}</span>
+                <span>8:00 - 18:00</span>
               </li>
               <li className="flex justify-between">
-                <span>Saturday</span>
-                <span>9:00 AM - 4:00 PM</span>
+                <span>{language === 'fr' ? 'Samedi' : 'Saturday'}</span>
+                <span>9:00 - 14:00</span>
               </li>
               <li className="flex justify-between">
-                <span>Sunday</span>
-                <span>Closed</span>
+                <span>{language === 'fr' ? 'Dimanche' : 'Sunday'}</span>
+                <span>{language === 'fr' ? 'Fermé' : 'Closed'}</span>
               </li>
             </ul>
           </div>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Mail, Phone, MapPin, Clock, MessageCircle, CheckCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, Clock, MessageCircle, CheckCircle, Building } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -19,7 +19,7 @@ import MainLayout from '@/components/layout/MainLayout';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { COMPANY_NAME, COMPANY_EMAIL, WHATSAPP_DISPLAY, getWhatsAppUrl } from '@/lib/constants';
+import { COMPANY_NAME, COMPANY_EMAIL, WHATSAPP_DISPLAY, COMPANY_ADDRESS, GOOGLE_MAPS_EMBED_URL, getWhatsAppUrl } from '@/lib/constants';
 
 const contactSchema = z.object({
   name: z.string().min(2, 'Name is required').max(100),
@@ -81,7 +81,17 @@ const Contact = () => {
     {
       icon: MapPin,
       title: language === 'fr' ? 'Adresse' : 'Address',
-      lines: ['Kinshasa, RDC', 'Lubumbashi, RDC'],
+      lines: [
+        COMPANY_ADDRESS.street,
+        COMPANY_ADDRESS.building,
+        COMPANY_ADDRESS.floor,
+        COMPANY_ADDRESS.city,
+      ],
+    },
+    {
+      icon: Building,
+      title: language === 'fr' ? 'Repère' : 'Reference',
+      lines: [COMPANY_ADDRESS.reference],
     },
     {
       icon: Phone,
@@ -127,17 +137,19 @@ const Contact = () => {
                 {language === 'fr' ? 'Informations de Contact' : 'Contact Information'}
               </h2>
               
-              <div className="grid sm:grid-cols-2 gap-6 mb-8">
+              <div className="grid gap-4 mb-8">
                 {contactInfo.map((info, index) => (
                   <Card key={index} className="border-0 bg-card">
-                    <CardContent className="p-6">
-                      <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                        <info.icon className="w-6 h-6 text-primary" />
+                    <CardContent className="p-4 flex items-start gap-4">
+                      <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <info.icon className="w-5 h-5 text-primary" />
                       </div>
-                      <h3 className="font-semibold text-foreground mb-2">{info.title}</h3>
-                      {info.lines.map((line, i) => (
-                        <p key={i} className="text-sm text-muted-foreground">{line}</p>
-                      ))}
+                      <div>
+                        <h3 className="font-semibold text-foreground mb-1">{info.title}</h3>
+                        {info.lines.map((line, i) => (
+                          <p key={i} className="text-sm text-muted-foreground">{line}</p>
+                        ))}
+                      </div>
                     </CardContent>
                   </Card>
                 ))}
@@ -152,17 +164,17 @@ const Contact = () => {
                 {language === 'fr' ? 'Contactez-nous sur WhatsApp' : 'Contact us on WhatsApp'}
               </Button>
 
-              {/* Map - Kinshasa */}
+              {/* Map */}
               <div className="aspect-video rounded-lg overflow-hidden bg-muted">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d254747.51837626!2d15.207686!3d-4.3217055!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1a6a30e7e9f7e8bf%3A0x4c6b5e0c70c5c2c5!2sKinshasa%2C%20Democratic%20Republic%20of%20the%20Congo!5e0!3m2!1sen!2sus!4v1702000000000!5m2!1sen!2sus"
+                  src={GOOGLE_MAPS_EMBED_URL}
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title={`${COMPANY_NAME} Location`}
+                  title={`${COMPANY_NAME} - Kinshasa Gombe`}
                 />
               </div>
             </div>
@@ -199,7 +211,7 @@ const Contact = () => {
                             <FormItem>
                               <FormLabel>{t('contact.name')} *</FormLabel>
                               <FormControl>
-                                <Input placeholder={language === 'fr' ? 'Jean Dupont' : 'John Doe'} {...field} />
+                                <Input placeholder={language === 'fr' ? 'Votre nom' : 'Your name'} {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
