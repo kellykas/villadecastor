@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Award, Clock, DollarSign, HeadphonesIcon, Building2, Hammer, PaintBucket, Home as HomeIcon } from 'lucide-react';
+import { ArrowRight, Award, Clock, DollarSign, HeadphonesIcon, Building2, Hammer, PaintBucket, Home as HomeIcon, Wrench, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import MainLayout from '@/components/layout/MainLayout';
@@ -8,7 +8,9 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import heroImage from '@/assets/hero-construction.jpg';
 
-const serviceIcons = [Building2, Hammer, PaintBucket, HomeIcon];
+const serviceIcons = [Building2, Hammer, Wrench, PaintBucket, HomeIcon];
+
+const WHATSAPP_NUMBER = '+243000000000'; // Replace with actual number
 
 const Index = () => {
   const { t, language } = useLanguage();
@@ -41,7 +43,8 @@ const Index = () => {
         .select(`
           id,
           category,
-          project_translations!inner(title, description)
+          project_translations!inner(title, description),
+          project_images(image_url, display_order)
         `)
         .eq('is_active', true)
         .eq('is_featured', true)
@@ -54,9 +57,9 @@ const Index = () => {
   });
 
   const stats = [
-    { value: '25+', label: t('about.experience') },
-    { value: '500+', label: t('about.projects_completed') },
-    { value: '50+', label: t('about.team_members') },
+    { value: '10+', label: t('about.experience') },
+    { value: '200+', label: t('about.projects_completed') },
+    { value: '30+', label: t('about.team_members') },
     { value: '98%', label: t('about.satisfaction') },
   ];
 
@@ -66,6 +69,13 @@ const Index = () => {
     { icon: DollarSign, title: t('why.budget'), description: t('why.budget_desc') },
     { icon: HeadphonesIcon, title: t('why.support'), description: t('why.support_desc') },
   ];
+
+  const handleWhatsApp = () => {
+    const message = language === 'fr' 
+      ? 'Bonjour, je souhaite obtenir des informations sur vos services.'
+      : 'Hello, I would like to get information about your services.';
+    window.open(`https://wa.me/${WHATSAPP_NUMBER.replace(/\+/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
+  };
 
   return (
     <MainLayout>
@@ -80,8 +90,11 @@ const Index = () => {
         
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-2xl">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-secondary-foreground mb-6 leading-tight">
-              {t('hero.title')}
+            <p className="text-primary font-semibold text-lg mb-3">
+              Villa de Castor
+            </p>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-secondary-foreground mb-4 leading-tight">
+              {t('hero.slogan') || (language === 'fr' ? 'Construction, rénovation & décoration intérieure en RDC' : 'Construction, renovation & interior design in DRC')}
             </h1>
             <p className="text-lg md:text-xl text-secondary-foreground/80 mb-8">
               {t('hero.subtitle')}
@@ -93,11 +106,15 @@ const Index = () => {
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
-              <Link to="/projects">
-                <Button size="lg" variant="outline" className="w-full sm:w-auto border-secondary-foreground/30 text-secondary-foreground hover:bg-secondary-foreground/10 font-semibold text-lg px-8">
-                  {t('hero.secondary_cta')}
-                </Button>
-              </Link>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="w-full sm:w-auto border-green-500 text-green-500 hover:bg-green-500 hover:text-white font-semibold text-lg px-8"
+                onClick={handleWhatsApp}
+              >
+                <MessageCircle className="mr-2 w-5 h-5" />
+                WhatsApp
+              </Button>
             </div>
           </div>
         </div>
@@ -129,9 +146,17 @@ const Index = () => {
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
                 {t('about.title')}
               </h2>
-              <p className="text-muted-foreground leading-relaxed mb-6">
+              <p className="text-muted-foreground leading-relaxed mb-4">
                 {t('about.description')}
               </p>
+              <div className="space-y-2 mb-6">
+                <p className="text-sm font-medium text-primary">
+                  📍 {t('about.zones') || (language === 'fr' ? 'Zones d\'intervention : Kinshasa & Lubumbashi' : 'Service areas: Kinshasa & Lubumbashi')}
+                </p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  ✓ {t('about.legal') || (language === 'fr' ? 'Entreprise légalement enregistrée - RCCM & ID NAT' : 'Legally registered company - RCCM & ID NAT')}
+                </p>
+              </div>
               <Link to="/about">
                 <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
                   {t('common.learn_more')}
@@ -143,12 +168,12 @@ const Index = () => {
               <div className="aspect-[4/3] rounded-lg overflow-hidden bg-muted">
                 <img 
                   src={heroImage}
-                  alt="Construction team" 
+                  alt="Villa de Castor team" 
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="absolute -bottom-6 -left-6 bg-primary text-primary-foreground p-6 rounded-lg shadow-lg hidden md:block">
-                <div className="text-3xl font-bold">25+</div>
+                <div className="text-3xl font-bold">10+</div>
                 <div className="text-sm">{t('about.experience')}</div>
               </div>
             </div>
@@ -168,16 +193,22 @@ const Index = () => {
             </p>
           </div>
           
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             {services?.map((service, index) => {
               const Icon = serviceIcons[index % serviceIcons.length];
               const translation = service.service_translations[0];
               return (
                 <Card key={service.id} className="group hover:shadow-lg transition-all duration-300 border-0 bg-card">
                   <CardContent className="p-6">
-                    <div className="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                      <Icon className="w-7 h-7 text-primary group-hover:text-primary-foreground" />
-                    </div>
+                    {service.image_url ? (
+                      <div className="w-full h-32 mb-4 rounded-lg overflow-hidden">
+                        <img src={service.image_url} alt={translation.title} className="w-full h-full object-cover" />
+                      </div>
+                    ) : (
+                      <div className="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                        <Icon className="w-7 h-7 text-primary group-hover:text-primary-foreground" />
+                      </div>
+                    )}
                     <h3 className="text-lg font-semibold text-foreground mb-2">
                       {translation.title}
                     </h3>
@@ -241,11 +272,12 @@ const Index = () => {
           <div className="grid md:grid-cols-3 gap-6">
             {projects?.map((project) => {
               const translation = project.project_translations[0];
+              const firstImage = project.project_images?.sort((a: any, b: any) => a.display_order - b.display_order)?.[0]?.image_url;
               return (
                 <Card key={project.id} className="group overflow-hidden border-0 bg-card hover:shadow-xl transition-all duration-300">
                   <div className="aspect-[16/10] bg-secondary/20 relative overflow-hidden">
                     <img 
-                      src={heroImage}
+                      src={firstImage || heroImage}
                       alt={translation.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
@@ -288,12 +320,23 @@ const Index = () => {
           <p className="text-secondary-foreground/80 max-w-2xl mx-auto mb-8">
             {t('cta.description')}
           </p>
-          <Link to="/quote">
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-lg px-10">
-              {t('cta.button')}
-              <ArrowRight className="ml-2 w-5 h-5" />
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/quote">
+              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-lg px-10">
+                {t('cta.button')}
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            </Link>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="border-green-500 text-green-500 hover:bg-green-500 hover:text-white font-semibold text-lg px-10"
+              onClick={handleWhatsApp}
+            >
+              <MessageCircle className="mr-2 w-5 h-5" />
+              WhatsApp
             </Button>
-          </Link>
+          </div>
         </div>
       </section>
     </MainLayout>

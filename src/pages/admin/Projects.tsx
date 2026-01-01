@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import AdminLayout from '@/components/admin/AdminLayout';
+import ImageUpload from '@/components/admin/ImageUpload';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,7 +12,7 @@ import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import { Plus, Pencil, Trash2, Loader2, Star } from 'lucide-react';
+import { Plus, Pencil, Trash2, Loader2, Star, Image } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 const Projects = () => {
@@ -21,6 +22,7 @@ const Projects = () => {
     category: '', 
     is_active: true,
     is_featured: false,
+    images: [] as string[],
     translations: { en: { title: '', description: '' }, fr: { title: '', description: '' } }
   });
   const { toast } = useToast();
@@ -29,7 +31,7 @@ const Projects = () => {
   const { data: projects, isLoading } = useQuery({
     queryKey: ['admin-projects'],
     queryFn: async () => {
-      const { data, error } = await supabase.from('projects').select(`*, project_translations(*)`).order('created_at', { ascending: false });
+      const { data, error } = await supabase.from('projects').select(`*, project_translations(*), project_images(*)`).order('created_at', { ascending: false });
       if (error) throw error;
       return data;
     }
@@ -46,6 +48,8 @@ const Projects = () => {
 
   const saveMutation = useMutation({
     mutationFn: async (data: typeof formData & { id?: string }) => {
+      let projectId = data.id;
+      
       if (data.id) {
         const { error: projectError } = await supabase.from('projects').update({ 
           category: data.category, 
@@ -70,6 +74,7 @@ const Projects = () => {
           is_featured: data.is_featured
         }).select().single();
         if (projectError) throw projectError;
+        projectId = newProject.id;
 
         for (const [lang, trans] of Object.entries(data.translations)) {
           const { error: transError } = await supabase.from('project_translations').insert({
@@ -79,6 +84,20 @@ const Projects = () => {
             description: trans.description
           });
           if (transError) throw transError;
+        }
+      }
+
+      // Handle images
+      if (projectId) {
+        await supabase.from('project_images').delete().eq('project_id', projectId);
+        if (data.images.length > 0) {
+          const imageInserts = data.images.map((url, index) => ({
+            project_id: projectId!,
+            image_url: url,
+            display_order: index
+          }));
+          const { error: imgError } = await supabase.from('project_images').insert(imageInserts);
+          if (imgError) throw imgError;
         }
       }
     },
@@ -108,6 +127,7 @@ const Projects = () => {
       category: '', 
       is_active: true,
       is_featured: false,
+      images: [],
       translations: { en: { title: '', description: '' }, fr: { title: '', description: '' } }
     });
     setEditingId(null);
@@ -119,10 +139,12 @@ const Projects = () => {
     project.project_translations?.forEach((t: any) => {
       translations[t.language] = { title: t.title, description: t.description || '' };
     });
+    const images = project.project_images?.sort((a: any, b: any) => a.display_order - b.display_order).map((img: any) => img.image_url) || [];
     setFormData({ 
       category: project.category || '', 
       is_active: project.is_active ?? true,
       is_featured: project.is_featured ?? false,
+      images,
       translations
     });
     setEditingId(project.id);
@@ -144,6 +166,14 @@ const Projects = () => {
     });
   };
 
+  const addImage = (url: string) => {
+    setFormData({ ...formData, images: [...formData.images, url] });
+  };
+
+  const removeImage = (index: number) => {
+    setFormData({ ...formData, images: formData.images.filter((_, i) => i !== index) });
+  };
+
   return (
     <AdminLayout>
       <div className="space-y-6">
@@ -156,7 +186,7 @@ const Projects = () => {
             <DialogTrigger asChild>
               <Button><Plus className="w-4 h-4 mr-2" />Add Project</Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl">
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>{editingId ? 'Edit Project' : 'Add Project'}</DialogTitle>
               </DialogHeader>
@@ -172,6 +202,30 @@ const Projects = () => {
                 <div className="flex items-center justify-between">
                   <Label>Featured</Label>
                   <Switch checked={formData.is_featured} onCheckedChange={(checked) => setFormData({ ...formData, is_featured: checked })} />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Project Images</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {formData.images.map((url, index) => (
+                      <div key={index} className="relative">
+                        <img src={url} alt="" className="w-20 h-20 object-cover rounded border border-border" />
+                        <Button
+                          type="button"
+                          size="icon"
+                          variant="destructive"
+                          className="absolute -top-2 -right-2 w-5 h-5"
+                          onClick={() => removeImage(index)}
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                  <ImageUpload 
+                    bucket="projects-images"
+                    onUpload={addImage}
+                  />
                 </div>
                 
                 <Tabs defaultValue="en">
@@ -225,6 +279,7 @@ const Projects = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead className="w-[60px]">Images</TableHead>
                     <TableHead>Title (EN)</TableHead>
                     <TableHead>Category</TableHead>
                     <TableHead>Status</TableHead>
@@ -235,8 +290,18 @@ const Projects = () => {
                 <TableBody>
                   {projects?.map((project) => {
                     const enTrans = project.project_translations?.find((t: any) => t.language === 'en');
+                    const firstImage = project.project_images?.[0]?.image_url;
                     return (
                       <TableRow key={project.id}>
+                        <TableCell>
+                          {firstImage ? (
+                            <img src={firstImage} alt="" className="w-12 h-12 object-cover rounded" />
+                          ) : (
+                            <div className="w-12 h-12 bg-muted rounded flex items-center justify-center">
+                              <Image className="w-4 h-4 text-muted-foreground" />
+                            </div>
+                          )}
+                        </TableCell>
                         <TableCell className="font-medium">{enTrans?.title || 'Untitled'}</TableCell>
                         <TableCell className="capitalize">{project.category || '-'}</TableCell>
                         <TableCell>
