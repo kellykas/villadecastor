@@ -46,12 +46,15 @@ const About = () => {
   return (
     <MainLayout>
       {/* Hero Section */}
-      <section className="relative py-20 md:py-32 bg-secondary">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-secondary-foreground mb-4">
+      <section className="relative py-20 md:py-32 bg-secondary overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent" />
+        </div>
+        <div className="container mx-auto px-4 text-center relative">
+          <h1 className="text-4xl md:text-5xl font-bold text-secondary-foreground mb-4 animate-fade-in opacity-0" style={{ animationDelay: '0.1s' }}>
             {t('about.title')}
           </h1>
-          <p className="text-lg text-secondary-foreground/80 max-w-2xl mx-auto">
+          <p className="text-lg text-secondary-foreground/80 max-w-2xl mx-auto animate-fade-in opacity-0" style={{ animationDelay: '0.2s' }}>
             {COMPANY_NAME} - {language === 'fr' 
               ? 'Construire l\'excellence en RDC'
               : 'Building excellence in DRC'}
@@ -63,20 +66,20 @@ const About = () => {
       <section className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="relative">
+            <div className="relative animate-fade-in-left opacity-0" style={{ animationDelay: '0.2s' }}>
               <div className="aspect-[4/3] rounded-lg overflow-hidden">
                 <img 
                   src={heroImage}
                   alt={`${COMPANY_NAME} team`}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                 />
               </div>
-              <div className="absolute -bottom-6 -right-6 bg-primary text-primary-foreground p-6 rounded-lg shadow-lg hidden md:block">
+              <div className="absolute -bottom-6 -right-6 bg-primary text-primary-foreground p-6 rounded-lg shadow-lg hidden md:block animate-float">
                 <div className="text-3xl font-bold">2014</div>
                 <div className="text-sm">{language === 'fr' ? 'Fondée' : 'Founded'}</div>
               </div>
             </div>
-            <div>
+            <div className="animate-fade-in-right opacity-0" style={{ animationDelay: '0.3s' }}>
               <h2 className="text-3xl font-bold text-foreground mb-6">
                 {language === 'fr' ? 'Notre Histoire' : 'Our Story'}
               </h2>
@@ -116,7 +119,11 @@ const About = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
-              <div key={index} className="text-center">
+              <div 
+                key={index} 
+                className="text-center animate-fade-in-up opacity-0"
+                style={{ animationDelay: `${0.1 * index}s` }}
+              >
                 <div className="text-3xl md:text-4xl font-bold text-primary-foreground mb-1">
                   {stat.value}
                 </div>
@@ -133,10 +140,10 @@ const About = () => {
       <section className="py-16 md:py-24 bg-muted">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-8">
-            <Card className="border-0 bg-card">
+            <Card className="border-0 bg-card hover:shadow-xl transition-all duration-500 hover:-translate-y-2 animate-fade-in-left opacity-0" style={{ animationDelay: '0.1s' }}>
               <CardContent className="p-8">
-                <div className="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center mb-6">
-                  <Target className="w-7 h-7 text-primary" />
+                <div className="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center mb-6 hover:bg-primary hover:scale-110 transition-all duration-300 group">
+                  <Target className="w-7 h-7 text-primary group-hover:text-primary-foreground transition-colors" />
                 </div>
                 <h3 className="text-2xl font-bold text-foreground mb-4">
                   {language === 'fr' ? 'Notre Mission' : 'Our Mission'}
@@ -147,10 +154,10 @@ const About = () => {
               </CardContent>
             </Card>
             
-            <Card className="border-0 bg-card">
+            <Card className="border-0 bg-card hover:shadow-xl transition-all duration-500 hover:-translate-y-2 animate-fade-in-right opacity-0" style={{ animationDelay: '0.2s' }}>
               <CardContent className="p-8">
-                <div className="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center mb-6">
-                  <Eye className="w-7 h-7 text-primary" />
+                <div className="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center mb-6 hover:bg-primary hover:scale-110 transition-all duration-300 group">
+                  <Eye className="w-7 h-7 text-primary group-hover:text-primary-foreground transition-colors" />
                 </div>
                 <h3 className="text-2xl font-bold text-foreground mb-4">
                   {language === 'fr' ? 'Notre Vision' : 'Our Vision'}
@@ -167,17 +174,21 @@ const About = () => {
       {/* Core Values */}
       <section className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground text-center mb-12 animate-fade-in opacity-0">
             {language === 'fr' ? 'Nos Valeurs Fondamentales' : 'Our Core Values'}
           </h2>
           
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((value, index) => (
-              <div key={index} className="text-center">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <value.icon className="w-8 h-8 text-primary" />
+              <div 
+                key={index} 
+                className="text-center group animate-fade-in-up opacity-0"
+                style={{ animationDelay: `${0.1 * index}s` }}
+              >
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary group-hover:scale-110 transition-all duration-300">
+                  <value.icon className="w-8 h-8 text-primary group-hover:text-primary-foreground transition-colors" />
                 </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">
+                <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
                   {value.title}
                 </h3>
                 <p className="text-sm text-muted-foreground">
