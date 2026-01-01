@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { MapPin } from 'lucide-react';
 import MainLayout from '@/components/layout/MainLayout';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import heroImage from '@/assets/hero-construction.jpg';
+import { COMPANY_NAME } from '@/lib/constants';
 
 const Projects = () => {
   const { t, language } = useLanguage();
@@ -20,7 +22,8 @@ const Projects = () => {
           id,
           category,
           is_featured,
-          project_translations!inner(title, description)
+          project_translations!inner(title, description),
+          project_images(image_url, display_order)
         `)
         .eq('is_active', true)
         .eq('project_translations.language', language);
@@ -43,13 +46,19 @@ const Projects = () => {
       residential: 'Residential',
       commercial: 'Commercial',
       renovation: 'Renovation',
-      industrial: 'Industrial',
+      rehabilitation: 'Rehabilitation',
+      construction: 'Construction',
+      interior: 'Interior Design',
+      painting: 'Painting',
     },
     fr: {
       residential: 'Résidentiel',
       commercial: 'Commercial',
       renovation: 'Rénovation',
-      industrial: 'Industriel',
+      rehabilitation: 'Réhabilitation',
+      construction: 'Construction',
+      interior: 'Aménagement Intérieur',
+      painting: 'Peinture',
     }
   };
 
@@ -59,10 +68,12 @@ const Projects = () => {
       <section className="relative py-20 md:py-32 bg-secondary">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-secondary-foreground mb-4">
-            {t('projects.title')}
+            {language === 'fr' ? 'Nos Réalisations' : 'Our Projects'}
           </h1>
           <p className="text-lg text-secondary-foreground/80 max-w-2xl mx-auto">
-            {t('projects.subtitle')}
+            {language === 'fr' 
+              ? 'Découvrez nos projets réalisés à Kinshasa et Lubumbashi. Chaque chantier témoigne de notre savoir-faire.'
+              : 'Discover our completed projects in Kinshasa and Lubumbashi. Each project showcases our expertise.'}
           </p>
         </div>
       </section>
@@ -98,18 +109,22 @@ const Projects = () => {
           {isLoading ? (
             <div className="text-center text-muted-foreground">{t('common.loading')}</div>
           ) : (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredProjects?.map((project) => {
                 const translation = project.project_translations[0];
+                const images = project.project_images?.sort((a: any, b: any) => a.display_order - b.display_order) || [];
+                const mainImage = images[0]?.image_url || heroImage;
+                
                 return (
                   <Card key={project.id} className="group overflow-hidden border-0 bg-card hover:shadow-xl transition-all duration-300">
+                    {/* Main Image */}
                     <div className="aspect-[16/10] bg-secondary/20 relative overflow-hidden">
                       <img 
-                        src={heroImage}
+                        src={mainImage}
                         alt={translation.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
-                      <div className="absolute top-3 left-3 flex gap-2">
+                      <div className="absolute top-3 left-3 flex gap-2 flex-wrap">
                         <span className="px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded-full capitalize">
                           {categoryLabels[language]?.[project.category || ''] || project.category}
                         </span>
@@ -120,13 +135,44 @@ const Projects = () => {
                         )}
                       </div>
                     </div>
+                    
+                    {/* Before/After Images (if multiple images exist) */}
+                    {images.length >= 2 && (
+                      <div className="grid grid-cols-2 gap-1 p-1 bg-muted">
+                        <div className="relative aspect-video">
+                          <img 
+                            src={images[0]?.image_url || heroImage} 
+                            alt={language === 'fr' ? 'Avant' : 'Before'}
+                            className="w-full h-full object-cover"
+                          />
+                          <span className="absolute bottom-1 left-1 px-2 py-0.5 bg-secondary/80 text-secondary-foreground text-xs rounded">
+                            {language === 'fr' ? 'Avant' : 'Before'}
+                          </span>
+                        </div>
+                        <div className="relative aspect-video">
+                          <img 
+                            src={images[1]?.image_url || heroImage} 
+                            alt={language === 'fr' ? 'Après' : 'After'}
+                            className="w-full h-full object-cover"
+                          />
+                          <span className="absolute bottom-1 left-1 px-2 py-0.5 bg-primary/80 text-primary-foreground text-xs rounded">
+                            {language === 'fr' ? 'Après' : 'After'}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                    
                     <CardContent className="p-5">
                       <h3 className="text-lg font-semibold text-foreground mb-2">
                         {translation.title}
                       </h3>
-                      <p className="text-sm text-muted-foreground line-clamp-3">
+                      <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
                         {translation.description}
                       </p>
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <MapPin className="w-3 h-3" />
+                        <span>{language === 'fr' ? 'Kinshasa / Lubumbashi, RDC' : 'Kinshasa / Lubumbashi, DRC'}</span>
+                      </div>
                     </CardContent>
                   </Card>
                 );

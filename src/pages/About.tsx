@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import MainLayout from '@/components/layout/MainLayout';
 import { useLanguage } from '@/contexts/LanguageContext';
 import heroImage from '@/assets/hero-construction.jpg';
+import { COMPANY_NAME } from '@/lib/constants';
 
 const About = () => {
   const { t, language } = useLanguage();
@@ -35,8 +36,8 @@ const About = () => {
     : 'To be the recognized leader in the construction industry in DRC, renowned for our innovation, reliability, and unwavering commitment to excellence.';
 
   const aboutText = language === 'fr'
-    ? 'Villa de Castor est une entreprise de construction et rénovation basée en République Démocratique du Congo. Avec plus d\'une décennie d\'expérience, nous avons réussi à réaliser des centaines de projets résidentiels et commerciaux à Kinshasa et Lubumbashi, gagnant la confiance de nos clients grâce à notre dévouement à un savoir-faire de qualité et à un service exceptionnel.'
-    : 'Villa de Castor is a construction and renovation company based in the Democratic Republic of Congo. With over a decade of experience, we have successfully completed hundreds of residential and commercial projects in Kinshasa and Lubumbashi, earning the trust of our clients through our dedication to quality craftsmanship and exceptional service.';
+    ? `${COMPANY_NAME} est une entreprise de construction et rénovation basée en République Démocratique du Congo. Avec plus d'une décennie d'expérience, nous avons réussi à réaliser des centaines de projets résidentiels et commerciaux à Kinshasa et Lubumbashi, gagnant la confiance de nos clients grâce à notre dévouement à un savoir-faire de qualité et à un service exceptionnel.`
+    : `${COMPANY_NAME} is a construction and renovation company based in the Democratic Republic of Congo. With over a decade of experience, we have successfully completed hundreds of residential and commercial projects in Kinshasa and Lubumbashi, earning the trust of our clients through our dedication to quality craftsmanship and exceptional service.`;
 
   const experienceText = language === 'fr'
     ? 'Notre équipe de professionnels qualifiés apporte une expertise dans tous les aspects de la construction, des fondations aux finitions. Nous nous engageons à utiliser les dernières techniques et technologies pour assurer l\'efficacité, la sécurité et la durabilité de chaque projet.'
@@ -51,7 +52,7 @@ const About = () => {
             {t('about.title')}
           </h1>
           <p className="text-lg text-secondary-foreground/80 max-w-2xl mx-auto">
-            Villa de Castor - {language === 'fr' 
+            {COMPANY_NAME} - {language === 'fr' 
               ? 'Construire l\'excellence en RDC'
               : 'Building excellence in DRC'}
           </p>
@@ -66,7 +67,7 @@ const About = () => {
               <div className="aspect-[4/3] rounded-lg overflow-hidden">
                 <img 
                   src={heroImage}
-                  alt="Villa de Castor team" 
+                  alt={`${COMPANY_NAME} team`}
                   className="w-full h-full object-cover"
                 />
               </div>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -26,13 +26,14 @@ import MainLayout from '@/components/layout/MainLayout';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { COMPANY_NAME, getWhatsAppUrl, WHATSAPP_DISPLAY } from '@/lib/constants';
 
 const quoteSchema = z.object({
   full_name: z.string().min(2, 'Name is required').max(100),
-  phone: z.string().optional(),
-  email: z.string().email('Invalid email address').max(255),
+  phone: z.string().min(6, 'Phone is required').max(20),
+  email: z.string().email('Invalid email address').max(255).optional().or(z.literal('')),
   project_type: z.string().min(1, 'Project type is required'),
-  description: z.string().min(10, 'Please provide more details').max(2000),
+  description: z.string().max(2000).optional(),
   budget: z.string().optional(),
 });
 
@@ -57,31 +58,37 @@ const Quote = () => {
   });
 
   const projectTypes = language === 'fr' ? [
-    { value: 'residential', label: 'Construction Résidentielle' },
-    { value: 'commercial', label: 'Projet Commercial' },
+    { value: 'construction', label: 'Construction' },
     { value: 'renovation', label: 'Rénovation' },
-    { value: 'interior', label: 'Design d\'Intérieur' },
+    { value: 'rehabilitation', label: 'Réhabilitation' },
+    { value: 'painting', label: 'Peinture & Décoration' },
+    { value: 'interior', label: 'Aménagement Intérieur' },
     { value: 'other', label: 'Autre' },
   ] : [
-    { value: 'residential', label: 'Residential Construction' },
-    { value: 'commercial', label: 'Commercial Project' },
+    { value: 'construction', label: 'Construction' },
     { value: 'renovation', label: 'Renovation' },
+    { value: 'rehabilitation', label: 'Rehabilitation' },
+    { value: 'painting', label: 'Painting & Decoration' },
     { value: 'interior', label: 'Interior Design' },
     { value: 'other', label: 'Other' },
   ];
 
   const budgetRanges = language === 'fr' ? [
-    { value: '10k-50k', label: '10 000$ - 50 000$' },
+    { value: 'under-5k', label: 'Moins de 5 000$' },
+    { value: '5k-10k', label: '5 000$ - 10 000$' },
+    { value: '10k-25k', label: '10 000$ - 25 000$' },
+    { value: '25k-50k', label: '25 000$ - 50 000$' },
     { value: '50k-100k', label: '50 000$ - 100 000$' },
-    { value: '100k-250k', label: '100 000$ - 250 000$' },
-    { value: '250k-500k', label: '250 000$ - 500 000$' },
-    { value: '500k+', label: '500 000$+' },
+    { value: '100k+', label: '100 000$+' },
+    { value: 'unknown', label: 'Je ne sais pas encore' },
   ] : [
-    { value: '10k-50k', label: '$10,000 - $50,000' },
+    { value: 'under-5k', label: 'Under $5,000' },
+    { value: '5k-10k', label: '$5,000 - $10,000' },
+    { value: '10k-25k', label: '$10,000 - $25,000' },
+    { value: '25k-50k', label: '$25,000 - $50,000' },
     { value: '50k-100k', label: '$50,000 - $100,000' },
-    { value: '100k-250k', label: '$100,000 - $250,000' },
-    { value: '250k-500k', label: '$250,000 - $500,000' },
-    { value: '500k+', label: '$500,000+' },
+    { value: '100k+', label: '$100,000+' },
+    { value: 'unknown', label: 'I don\'t know yet' },
   ];
 
   const onSubmit = async (data: QuoteFormData) => {
@@ -89,10 +96,10 @@ const Quote = () => {
     try {
       const { error } = await supabase.from('quotes').insert({
         full_name: data.full_name,
-        phone: data.phone || null,
-        email: data.email,
+        phone: data.phone,
+        email: data.email || null,
         project_type: data.project_type,
-        description: data.description,
+        description: data.description || null,
         budget: data.budget || null,
         language: language,
       });
@@ -113,6 +120,13 @@ const Quote = () => {
     }
   };
 
+  const handleWhatsApp = () => {
+    const message = language === 'fr' 
+      ? 'Bonjour, je souhaite demander un devis pour un projet.'
+      : 'Hello, I would like to request a quote for a project.';
+    window.open(getWhatsAppUrl(message), '_blank');
+  };
+
   if (isSubmitted) {
     return (
       <MainLayout>
@@ -126,9 +140,19 @@ const Quote = () => {
                 <h2 className="text-2xl font-bold text-foreground mb-4">
                   {language === 'fr' ? 'Demande Envoyée!' : 'Request Submitted!'}
                 </h2>
-                <p className="text-muted-foreground">
-                  {t('quote.success')}
+                <p className="text-muted-foreground mb-6">
+                  {language === 'fr' 
+                    ? 'Merci pour votre demande. Notre équipe vous contactera dans les plus brefs délais.'
+                    : 'Thank you for your request. Our team will contact you shortly.'}
                 </p>
+                <Button 
+                  variant="outline" 
+                  className="border-green-500 text-green-500 hover:bg-green-500 hover:text-white"
+                  onClick={handleWhatsApp}
+                >
+                  <MessageCircle className="mr-2 w-4 h-4" />
+                  {language === 'fr' ? 'Ou contactez-nous sur WhatsApp' : 'Or contact us on WhatsApp'}
+                </Button>
               </CardContent>
             </Card>
           </div>
@@ -143,10 +167,12 @@ const Quote = () => {
       <section className="relative py-20 md:py-32 bg-secondary">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-secondary-foreground mb-4">
-            {t('quote.title')}
+            {language === 'fr' ? 'Demande de Devis' : 'Request a Quote'}
           </h1>
           <p className="text-lg text-secondary-foreground/80 max-w-2xl mx-auto">
-            {t('quote.subtitle')}
+            {language === 'fr' 
+              ? 'Remplissez le formulaire ci-dessous et nous vous contacterons rapidement.'
+              : 'Fill out the form below and we will contact you shortly.'}
           </p>
         </div>
       </section>
@@ -154,137 +180,171 @@ const Quote = () => {
       {/* Form Section */}
       <section className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4">
-          <Card className="max-w-2xl mx-auto border-0 bg-card shadow-lg">
-            <CardContent className="p-8">
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  <div className="grid sm:grid-cols-2 gap-6">
-                    <FormField
-                      control={form.control}
-                      name="full_name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t('quote.name')} *</FormLabel>
-                          <FormControl>
-                            <Input placeholder={language === 'fr' ? 'Jean Dupont' : 'John Doe'} {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="phone"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t('quote.phone')}</FormLabel>
-                          <FormControl>
-                            <Input placeholder="+1 (514) 123-4567" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Form */}
+            <div className="lg:col-span-2">
+              <Card className="border-0 bg-card shadow-lg">
+                <CardContent className="p-8">
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                      <div className="grid sm:grid-cols-2 gap-6">
+                        <FormField
+                          control={form.control}
+                          name="full_name"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>{language === 'fr' ? 'Nom complet' : 'Full Name'} *</FormLabel>
+                              <FormControl>
+                                <Input placeholder={language === 'fr' ? 'Jean Dupont' : 'John Doe'} {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="phone"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>{language === 'fr' ? 'Téléphone' : 'Phone'} *</FormLabel>
+                              <FormControl>
+                                <Input placeholder="+243 XXX XXX XXX" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
 
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t('quote.email')} *</FormLabel>
-                        <FormControl>
-                          <Input type="email" placeholder="email@example.com" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className="grid sm:grid-cols-2 gap-6">
-                    <FormField
-                      control={form.control}
-                      name="project_type"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t('quote.project_type')} *</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email ({language === 'fr' ? 'optionnel' : 'optional'})</FormLabel>
                             <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder={language === 'fr' ? 'Sélectionnez...' : 'Select...'} />
-                              </SelectTrigger>
+                              <Input type="email" placeholder="email@example.com" {...field} />
                             </FormControl>
-                            <SelectContent>
-                              {projectTypes.map((type) => (
-                                <SelectItem key={type.value} value={type.value}>
-                                  {type.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="budget"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t('quote.budget')}</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <div className="grid sm:grid-cols-2 gap-6">
+                        <FormField
+                          control={form.control}
+                          name="project_type"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>{language === 'fr' ? 'Type de travaux' : 'Type of Work'} *</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder={language === 'fr' ? 'Sélectionnez...' : 'Select...'} />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {projectTypes.map((type) => (
+                                    <SelectItem key={type.value} value={type.value}>
+                                      {type.label}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="budget"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>{language === 'fr' ? 'Budget estimatif' : 'Estimated Budget'} ({language === 'fr' ? 'optionnel' : 'optional'})</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder={language === 'fr' ? 'Sélectionnez...' : 'Select...'} />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {budgetRanges.map((range) => (
+                                    <SelectItem key={range.value} value={range.value}>
+                                      {range.label}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
+                      <FormField
+                        control={form.control}
+                        name="description"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{language === 'fr' ? 'Description du projet' : 'Project Description'} ({language === 'fr' ? 'optionnel' : 'optional'})</FormLabel>
                             <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder={language === 'fr' ? 'Sélectionnez...' : 'Select...'} />
-                              </SelectTrigger>
+                              <Textarea 
+                                placeholder={language === 'fr' 
+                                  ? 'Décrivez brièvement votre projet...'
+                                  : 'Briefly describe your project...'}
+                                className="min-h-[120px]"
+                                {...field} 
+                              />
                             </FormControl>
-                            <SelectContent>
-                              {budgetRanges.map((range) => (
-                                <SelectItem key={range.value} value={range.value}>
-                                  {range.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <Button 
+                        type="submit" 
+                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6 text-lg"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting 
+                          ? (language === 'fr' ? 'Envoi en cours...' : 'Submitting...')
+                          : (language === 'fr' ? 'Envoyer la demande' : 'Submit Request')}
+                      </Button>
+                    </form>
+                  </Form>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* WhatsApp CTA */}
+            <div>
+              <Card className="border-0 bg-card shadow-lg sticky top-24">
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <MessageCircle className="w-8 h-8 text-green-600" />
                   </div>
-
-                  <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t('quote.description')} *</FormLabel>
-                        <FormControl>
-                          <Textarea 
-                            placeholder={language === 'fr' 
-                              ? 'Décrivez votre projet en détail...'
-                              : 'Describe your project in detail...'}
-                            className="min-h-[150px]"
-                            {...field} 
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
+                  <h3 className="text-lg font-semibold text-foreground mb-2">
+                    {language === 'fr' ? 'Préférez WhatsApp?' : 'Prefer WhatsApp?'}
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    {language === 'fr' 
+                      ? 'Contactez-nous directement pour une réponse rapide.'
+                      : 'Contact us directly for a quick response.'}
+                  </p>
+                  <p className="text-lg font-semibold text-foreground mb-4">
+                    {WHATSAPP_DISPLAY}
+                  </p>
                   <Button 
-                    type="submit" 
-                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6 text-lg"
-                    disabled={isSubmitting}
+                    className="w-full bg-green-500 hover:bg-green-600 text-white"
+                    onClick={handleWhatsApp}
                   >
-                    {isSubmitting 
-                      ? (language === 'fr' ? 'Envoi en cours...' : 'Submitting...')
-                      : t('quote.submit')}
+                    <MessageCircle className="mr-2 w-4 h-4" />
+                    WhatsApp
                   </Button>
-                </form>
-              </Form>
-            </CardContent>
-          </Card>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </div>
       </section>
     </MainLayout>
