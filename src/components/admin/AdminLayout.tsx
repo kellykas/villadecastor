@@ -14,7 +14,8 @@ import {
   LogOut,
   Menu,
   X,
-  ChevronRight
+  ChevronRight,
+  Newspaper
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -60,6 +61,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
     { href: '/admin/translations', icon: FileText, label: 'Translations' },
     { href: '/admin/services', icon: Briefcase, label: 'Services' },
     { href: '/admin/projects', icon: FolderOpen, label: 'Projects' },
+    { href: '/admin/blog', icon: Newspaper, label: 'Blog Posts' },
     { href: '/admin/quotes', icon: MessageSquare, label: 'Quotes' },
     { href: '/admin/messages', icon: Mail, label: 'Messages' },
   ];
