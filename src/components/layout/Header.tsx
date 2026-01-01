@@ -35,7 +35,7 @@ const Header = () => {
             <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
               <HardHat className="w-6 h-6 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold text-foreground">BuildPro</span>
+            <span className="text-xl font-bold text-foreground">Villa de Castor</span>
           </Link>
 
           {/* Desktop Navigation */}
