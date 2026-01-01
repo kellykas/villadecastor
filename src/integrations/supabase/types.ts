@@ -14,6 +14,83 @@ export type Database = {
   }
   public: {
     Tables: {
+      blog_post_translations: {
+        Row: {
+          blog_post_id: string
+          content: string | null
+          created_at: string | null
+          excerpt: string | null
+          id: string
+          language: string
+          title: string
+        }
+        Insert: {
+          blog_post_id: string
+          content?: string | null
+          created_at?: string | null
+          excerpt?: string | null
+          id?: string
+          language?: string
+          title: string
+        }
+        Update: {
+          blog_post_id?: string
+          content?: string | null
+          created_at?: string | null
+          excerpt?: string | null
+          id?: string
+          language?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_post_translations_blog_post_id_fkey"
+            columns: ["blog_post_id"]
+            isOneToOne: false
+            referencedRelation: "blog_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blog_posts: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          id: string
+          image_url: string | null
+          is_featured: boolean | null
+          is_published: boolean | null
+          published_at: string | null
+          read_time: string | null
+          slug: string
+          updated_at: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          id?: string
+          image_url?: string | null
+          is_featured?: boolean | null
+          is_published?: boolean | null
+          published_at?: string | null
+          read_time?: string | null
+          slug: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          id?: string
+          image_url?: string | null
+          is_featured?: boolean | null
+          is_published?: boolean | null
+          published_at?: string | null
+          read_time?: string | null
+          slug?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       contact_messages: {
         Row: {
           created_at: string | null

@@ -18,6 +18,7 @@ import Languages from "./pages/admin/Languages";
 import Translations from "./pages/admin/Translations";
 import AdminServices from "./pages/admin/Services";
 import AdminProjects from "./pages/admin/Projects";
+import AdminBlogPosts from "./pages/admin/BlogPosts";
 import Quotes from "./pages/admin/Quotes";
 import Messages from "./pages/admin/Messages";
 
@@ -44,6 +45,7 @@ const App = () => (
             <Route path="/admin/translations" element={<Translations />} />
             <Route path="/admin/services" element={<AdminServices />} />
             <Route path="/admin/projects" element={<AdminProjects />} />
+            <Route path="/admin/blog" element={<AdminBlogPosts />} />
             <Route path="/admin/quotes" element={<Quotes />} />
             <Route path="/admin/messages" element={<Messages />} />
             <Route path="*" element={<NotFound />} />
