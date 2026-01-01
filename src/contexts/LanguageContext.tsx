@@ -12,7 +12,7 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-const LANGUAGE_STORAGE_KEY = 'buildpro_language';
+const LANGUAGE_STORAGE_KEY = 'villadecastor_language';
 
 const detectBrowserLanguage = (): Language => {
   const browserLang = navigator.language.split('-')[0];

@@ -79,7 +79,7 @@ const Index = () => {
   return (
     <MainLayout>
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center">
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${heroImage})` }}
@@ -89,18 +89,18 @@ const Index = () => {
         
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-2xl">
-            <p className="text-primary font-semibold text-lg mb-3">
+            <p className="text-primary font-semibold text-lg mb-3 animate-fade-in opacity-0" style={{ animationDelay: '0.1s' }}>
               {COMPANY_NAME}
             </p>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-secondary-foreground mb-4 leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-secondary-foreground mb-4 leading-tight animate-fade-in opacity-0" style={{ animationDelay: '0.2s' }}>
               {t('hero.slogan') || (language === 'fr' ? 'Construction, rénovation & décoration intérieure en RDC' : 'Construction, renovation & interior design in DRC')}
             </h1>
-            <p className="text-lg md:text-xl text-secondary-foreground/80 mb-8">
+            <p className="text-lg md:text-xl text-secondary-foreground/80 mb-8 animate-fade-in opacity-0" style={{ animationDelay: '0.3s' }}>
               {t('hero.subtitle')}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 animate-fade-in opacity-0" style={{ animationDelay: '0.4s' }}>
               <Link to="/quote">
-                <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-lg px-8">
+                <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-lg px-8 hover:scale-105 transition-transform duration-300">
                   {t('hero.cta')}
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
@@ -108,7 +108,7 @@ const Index = () => {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="w-full sm:w-auto border-green-500 text-green-500 hover:bg-green-500 hover:text-white font-semibold text-lg px-8"
+                className="w-full sm:w-auto border-green-500 text-green-500 hover:bg-green-500 hover:text-white font-semibold text-lg px-8 hover:scale-105 transition-transform duration-300"
                 onClick={handleWhatsApp}
               >
                 <MessageCircle className="mr-2 w-5 h-5" />
@@ -124,7 +124,7 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             {stats.map((stat, index) => (
-              <div key={index} className="text-center">
+              <div key={index} className="text-center animate-fade-in-up opacity-0" style={{ animationDelay: `${0.1 * index}s` }}>
                 <div className="text-3xl md:text-4xl font-bold text-primary-foreground mb-1">
                   {stat.value}
                 </div>
@@ -197,18 +197,22 @@ const Index = () => {
               const Icon = serviceIcons[index % serviceIcons.length];
               const translation = service.service_translations[0];
               return (
-                <Card key={service.id} className="group hover:shadow-lg transition-all duration-300 border-0 bg-card">
+                <Card 
+                  key={service.id} 
+                  className="group hover:shadow-xl transition-all duration-500 border-0 bg-card hover:-translate-y-2 animate-fade-in-up opacity-0"
+                  style={{ animationDelay: `${0.1 * index}s` }}
+                >
                   <CardContent className="p-6">
                     {service.image_url ? (
                       <div className="w-full h-32 mb-4 rounded-lg overflow-hidden">
-                        <img src={service.image_url} alt={translation.title} className="w-full h-full object-cover" />
+                        <img src={service.image_url} alt={translation.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                       </div>
                     ) : (
-                      <div className="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                        <Icon className="w-7 h-7 text-primary group-hover:text-primary-foreground" />
+                      <div className="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 group-hover:scale-110">
+                        <Icon className="w-7 h-7 text-primary group-hover:text-primary-foreground transition-colors" />
                       </div>
                     )}
-                    <h3 className="text-lg font-semibold text-foreground mb-2">
+                    <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
                       {translation.title}
                     </h3>
                     <p className="text-sm text-muted-foreground line-clamp-3">
@@ -240,11 +244,15 @@ const Index = () => {
           
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {whyChooseUs.map((item, index) => (
-              <div key={index} className="text-center">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <item.icon className="w-8 h-8 text-primary" />
+              <div 
+                key={index} 
+                className="text-center group animate-fade-in-up opacity-0"
+                style={{ animationDelay: `${0.1 * index}s` }}
+              >
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary group-hover:scale-110 transition-all duration-300">
+                  <item.icon className="w-8 h-8 text-primary group-hover:text-primary-foreground transition-colors" />
                 </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">
+                <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
                   {item.title}
                 </h3>
                 <p className="text-sm text-muted-foreground">
@@ -269,17 +277,22 @@ const Index = () => {
           </div>
           
           <div className="grid md:grid-cols-3 gap-6">
-            {projects?.map((project) => {
+            {projects?.map((project, index) => {
               const translation = project.project_translations[0];
               const firstImage = project.project_images?.sort((a: any, b: any) => a.display_order - b.display_order)?.[0]?.image_url;
               return (
-                <Card key={project.id} className="group overflow-hidden border-0 bg-card hover:shadow-xl transition-all duration-300">
+                <Card 
+                  key={project.id} 
+                  className="group overflow-hidden border-0 bg-card hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 animate-fade-in-up opacity-0"
+                  style={{ animationDelay: `${0.15 * index}s` }}
+                >
                   <div className="aspect-[16/10] bg-secondary/20 relative overflow-hidden">
                     <img 
                       src={firstImage || heroImage}
                       alt={translation.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-secondary/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <div className="absolute top-3 left-3">
                       <span className="px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded-full capitalize">
                         {project.category}
@@ -287,7 +300,7 @@ const Index = () => {
                     </div>
                   </div>
                   <CardContent className="p-5">
-                    <h3 className="text-lg font-semibold text-foreground mb-2">
+                    <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
                       {translation.title}
                     </h3>
                     <p className="text-sm text-muted-foreground line-clamp-2">

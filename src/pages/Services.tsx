@@ -35,12 +35,15 @@ const Services = () => {
   return (
     <MainLayout>
       {/* Hero Section */}
-      <section className="relative py-20 md:py-32 bg-secondary">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-secondary-foreground mb-4">
+      <section className="relative py-20 md:py-32 bg-secondary overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent" />
+        </div>
+        <div className="container mx-auto px-4 text-center relative">
+          <h1 className="text-4xl md:text-5xl font-bold text-secondary-foreground mb-4 animate-fade-in opacity-0" style={{ animationDelay: '0.1s' }}>
             {t('services.title')}
           </h1>
-          <p className="text-lg text-secondary-foreground/80 max-w-2xl mx-auto">
+          <p className="text-lg text-secondary-foreground/80 max-w-2xl mx-auto animate-fade-in opacity-0" style={{ animationDelay: '0.2s' }}>
             {t('services.subtitle')}
           </p>
         </div>
@@ -57,22 +60,26 @@ const Services = () => {
                 const Icon = serviceIcons[index % serviceIcons.length];
                 const translation = service.service_translations[0];
                 return (
-                  <Card key={service.id} className="group border-0 bg-card hover:shadow-xl transition-all duration-300">
+                  <Card 
+                    key={service.id} 
+                    className="group border-0 bg-card hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 animate-fade-in-up opacity-0"
+                    style={{ animationDelay: `${0.1 * index}s` }}
+                  >
                     <CardContent className="p-8">
                       <div className="flex items-start gap-6">
-                        <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center shrink-0 group-hover:bg-primary transition-colors">
+                        <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center shrink-0 group-hover:bg-primary transition-all duration-300 group-hover:scale-110">
                           <Icon className="w-8 h-8 text-primary group-hover:text-primary-foreground transition-colors" />
                         </div>
                         <div className="flex-1">
-                          <h3 className="text-xl font-semibold text-foreground mb-3">
+                          <h3 className="text-xl font-semibold text-foreground mb-3 group-hover:text-primary transition-colors">
                             {translation.title}
                           </h3>
                           <p className="text-muted-foreground leading-relaxed mb-4">
                             {translation.description}
                           </p>
-                          <Link to="/quote" className="inline-flex items-center text-primary font-medium hover:underline">
+                          <Link to="/quote" className="inline-flex items-center text-primary font-medium hover:underline group/link">
                             {t('nav.quote')}
-                            <ArrowRight className="ml-2 w-4 h-4" />
+                            <ArrowRight className="ml-2 w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
                           </Link>
                         </div>
                       </div>
