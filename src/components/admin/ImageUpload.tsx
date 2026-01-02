@@ -13,6 +13,9 @@ interface ImageUploadProps {
   onRemove?: () => void;
 }
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+
 const ImageUpload = ({ bucket, currentUrl, onUpload, onRemove }: ImageUploadProps) => {
   const [uploading, setUploading] = useState(false);
   const { toast } = useToast();
@@ -20,6 +23,28 @@ const ImageUpload = ({ bucket, currentUrl, onUpload, onRemove }: ImageUploadProp
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    // Validate file type
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      toast({ 
+        title: 'Invalid file type', 
+        description: 'Please upload JPEG, PNG, WebP, or GIF images only', 
+        variant: 'destructive' 
+      });
+      e.target.value = '';
+      return;
+    }
+
+    // Validate file size
+    if (file.size > MAX_FILE_SIZE) {
+      toast({ 
+        title: 'File too large', 
+        description: 'Please upload images smaller than 5MB', 
+        variant: 'destructive' 
+      });
+      e.target.value = '';
+      return;
+    }
 
     const fileExt = file.name.split('.').pop();
     const fileName = `${crypto.randomUUID()}.${fileExt}`;
@@ -71,7 +96,7 @@ const ImageUpload = ({ bucket, currentUrl, onUpload, onRemove }: ImageUploadProp
         <div className="flex items-center gap-2">
           <Input
             type="file"
-            accept="image/*"
+            accept="image/jpeg,image/png,image/webp,image/gif"
             onChange={handleUpload}
             disabled={uploading}
             className="max-w-[250px]"
@@ -83,7 +108,7 @@ const ImageUpload = ({ bucket, currentUrl, onUpload, onRemove }: ImageUploadProp
         <div className="flex items-center gap-2 mt-2">
           <Input
             type="file"
-            accept="image/*"
+            accept="image/jpeg,image/png,image/webp,image/gif"
             onChange={handleUpload}
             disabled={uploading}
             className="max-w-[250px]"
