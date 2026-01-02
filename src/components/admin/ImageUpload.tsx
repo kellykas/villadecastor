@@ -7,7 +7,7 @@ import { Upload, X, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface ImageUploadProps {
-  bucket: 'services-images' | 'projects-images';
+  bucket: 'services-images' | 'projects-images' | 'blog-images';
   currentUrl?: string;
   onUpload: (url: string) => void;
   onRemove?: () => void;

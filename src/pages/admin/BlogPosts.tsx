@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import AdminLayout from '@/components/admin/AdminLayout';
+import ImageUpload from '@/components/admin/ImageUpload';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -12,7 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Pencil, Trash2, Eye, EyeOff, Star, StarOff } from 'lucide-react';
+import { Plus, Pencil, Trash2, Eye, EyeOff, Star, StarOff, Image } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 
@@ -26,6 +27,7 @@ const BlogPosts = () => {
     read_time: '5 min',
     is_published: false,
     is_featured: false,
+    image_url: '',
     title_en: '',
     excerpt_en: '',
     content_en: '',
@@ -60,6 +62,7 @@ const BlogPosts = () => {
           read_time: data.read_time,
           is_published: data.is_published,
           is_featured: data.is_featured,
+          image_url: data.image_url || null,
           published_at: data.is_published ? new Date().toISOString() : null,
         })
         .select()
@@ -99,6 +102,7 @@ const BlogPosts = () => {
           read_time: data.read_time,
           is_published: data.is_published,
           is_featured: data.is_featured,
+          image_url: data.image_url || null,
           published_at: data.is_published ? new Date().toISOString() : null,
         })
         .eq('id', id);
@@ -193,6 +197,7 @@ const BlogPosts = () => {
       read_time: '5 min',
       is_published: false,
       is_featured: false,
+      image_url: '',
       title_en: '',
       excerpt_en: '',
       content_en: '',
@@ -214,6 +219,7 @@ const BlogPosts = () => {
       read_time: post.read_time || '5 min',
       is_published: post.is_published || false,
       is_featured: post.is_featured || false,
+      image_url: post.image_url || '',
       title_en: enTrans?.title || '',
       excerpt_en: enTrans?.excerpt || '',
       content_en: enTrans?.content || '',
@@ -316,6 +322,35 @@ const BlogPosts = () => {
                   </div>
                 </div>
 
+                {/* Featured Image */}
+                <div className="space-y-2">
+                  <Label>Featured Image</Label>
+                  {formData.image_url ? (
+                    <div className="relative inline-block">
+                      <img 
+                        src={formData.image_url} 
+                        alt="Featured" 
+                        className="w-full max-w-md h-48 object-cover rounded-lg border border-border"
+                      />
+                      <Button
+                        type="button"
+                        size="icon"
+                        variant="destructive"
+                        className="absolute top-2 right-2 w-8 h-8"
+                        onClick={() => setFormData({ ...formData, image_url: '' })}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ) : null}
+                  <ImageUpload
+                    bucket="blog-images"
+                    currentUrl={formData.image_url || undefined}
+                    onUpload={(url) => setFormData({ ...formData, image_url: url })}
+                    onRemove={() => setFormData({ ...formData, image_url: '' })}
+                  />
+                </div>
+
                 {/* English Content */}
                 <Card>
                   <CardHeader className="py-3">
@@ -400,6 +435,7 @@ const BlogPosts = () => {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-[60px]">Image</TableHead>
                   <TableHead>Title</TableHead>
                   <TableHead>Category</TableHead>
                   <TableHead>Status</TableHead>
@@ -411,13 +447,13 @@ const BlogPosts = () => {
               <TableBody>
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                       Loading...
                     </TableCell>
                   </TableRow>
                 ) : blogPosts?.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                       No blog posts yet. Create your first one!
                     </TableCell>
                   </TableRow>
@@ -426,6 +462,15 @@ const BlogPosts = () => {
                     const enTrans = getTranslation(post, 'en');
                     return (
                       <TableRow key={post.id}>
+                        <TableCell>
+                          {post.image_url ? (
+                            <img src={post.image_url} alt="" className="w-12 h-12 object-cover rounded" />
+                          ) : (
+                            <div className="w-12 h-12 bg-muted rounded flex items-center justify-center">
+                              <Image className="w-4 h-4 text-muted-foreground" />
+                            </div>
+                          )}
+                        </TableCell>
                         <TableCell className="font-medium">{enTrans?.title || post.slug}</TableCell>
                         <TableCell>
                           <Badge variant="outline" className="capitalize">{post.category}</Badge>
