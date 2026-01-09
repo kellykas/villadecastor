@@ -1,10 +1,10 @@
-import { Award, Target, Eye, Heart, Users, Building, Clock, Shield, MapPin, FileCheck } from 'lucide-react';
+import { Award, Target, Eye, Heart, Users, Building, Clock, Shield, MapPin, FileCheck, Home, HardHat, Hammer } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import MainLayout from '@/components/layout/MainLayout';
 import { useLanguage } from '@/contexts/LanguageContext';
 import heroImage from '@/assets/hero-construction.jpg';
+import logoMain from '@/assets/logo-main.png';
 import { COMPANY_NAME } from '@/lib/constants';
-
 const About = () => {
   const { t, language } = useLanguage();
 
@@ -109,6 +109,101 @@ const About = () => {
                   <p>ID NAT: X-XXX-XXXXX-X</p>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Logo Identity Section */}
+      <section className="py-16 md:py-24 bg-muted overflow-hidden">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 animate-fade-in opacity-0">
+              {language === 'fr' ? 'Notre Identité' : 'Our Identity'}
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto animate-fade-in opacity-0" style={{ animationDelay: '0.1s' }}>
+              {language === 'fr' 
+                ? 'Découvrez la signification profonde de notre logo et les valeurs qu\'il représente.'
+                : 'Discover the deep meaning behind our logo and the values it represents.'}
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Logo Display */}
+            <div className="flex justify-center animate-fade-in opacity-0" style={{ animationDelay: '0.2s' }}>
+              <div className="relative group">
+                <div className="absolute inset-0 bg-primary/20 rounded-full blur-3xl scale-75 group-hover:scale-100 transition-transform duration-700" />
+                <img 
+                  src={logoMain} 
+                  alt="Villa de Castor Logo" 
+                  className="relative w-64 h-64 md:w-80 md:h-80 object-contain drop-shadow-2xl group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+            </div>
+
+            {/* Logo Elements Explanation */}
+            <div className="space-y-8">
+              {/* The Beaver */}
+              <div className="flex gap-6 items-start animate-fade-in opacity-0 group" style={{ animationDelay: '0.3s' }}>
+                <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-primary group-hover:scale-110 transition-all duration-300">
+                  <Hammer className="w-8 h-8 text-primary group-hover:text-primary-foreground transition-colors" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
+                    {language === 'fr' ? 'Le Castor' : 'The Beaver'}
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {language === 'fr' 
+                      ? 'Le castor symbolise le travail acharné, la précision, la persévérance et le savoir-faire. Il représente parfaitement une entreprise de construction et de rénovation qui construit avec intelligence et rigueur.'
+                      : 'The beaver symbolizes hard work, precision, perseverance, and expertise. It perfectly represents a construction and renovation company that builds with intelligence and rigor.'}
+                  </p>
+                </div>
+              </div>
+
+              {/* The Helmet & Architecture */}
+              <div className="flex gap-6 items-start animate-fade-in opacity-0 group" style={{ animationDelay: '0.4s' }}>
+                <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-primary group-hover:scale-110 transition-all duration-300">
+                  <HardHat className="w-8 h-8 text-primary group-hover:text-primary-foreground transition-colors" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
+                    {language === 'fr' ? 'Le Casque et l\'Architecture' : 'The Helmet & Architecture'}
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {language === 'fr' 
+                      ? 'Un casque de chantier symbolisant la sécurité, le professionnalisme et l\'expertise technique. Un toit de maison avec une fenêtre représentant l\'habitation, les bâtiments et la rénovation.'
+                      : 'A construction helmet symbolizing safety, professionalism, and technical expertise. A house roof with a window representing housing, buildings, and renovation.'}
+                  </p>
+                </div>
+              </div>
+
+              {/* The Fusion */}
+              <div className="flex gap-6 items-start animate-fade-in opacity-0 group" style={{ animationDelay: '0.5s' }}>
+                <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-primary group-hover:scale-110 transition-all duration-300">
+                  <Home className="w-8 h-8 text-primary group-hover:text-primary-foreground transition-colors" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
+                    {language === 'fr' ? 'La Fusion' : 'The Fusion'}
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {language === 'fr' 
+                      ? 'Cette fusion montre une entreprise experte sur le terrain, spécialisée dans les projets résidentiels et architecturaux. Villa de Castor est une entreprise de construction et de rénovation fiable, solide et professionnelle, qui bâtit avec précision et qualité durable.'
+                      : 'This fusion showcases a field-expert company, specialized in residential and architectural projects. Villa de Castor is a reliable, solid, and professional construction and renovation company that builds with precision and lasting quality.'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Tagline */}
+          <div className="mt-16 text-center animate-fade-in opacity-0" style={{ animationDelay: '0.6s' }}>
+            <div className="inline-block bg-primary text-primary-foreground px-8 py-4 rounded-lg shadow-lg">
+              <p className="text-lg font-semibold">
+                {language === 'fr' 
+                  ? 'Construction & Rénovation — Bâtir avec Excellence'
+                  : 'Construction & Renovation — Building with Excellence'}
+              </p>
             </div>
           </div>
         </div>
