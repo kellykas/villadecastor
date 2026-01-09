@@ -2,11 +2,39 @@ import { Award, Target, Eye, Heart, Users, Building, Clock, Shield, MapPin, File
 import { Card, CardContent } from '@/components/ui/card';
 import MainLayout from '@/components/layout/MainLayout';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 import heroImage from '@/assets/hero-construction.jpg';
 import logoMain from '@/assets/logo-main.png';
 import { COMPANY_NAME } from '@/lib/constants';
+
 const About = () => {
   const { t, language } = useLanguage();
+
+  // Fetch team members from database
+  const { data: teamMembers } = useQuery({
+    queryKey: ['team-members'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('team_members')
+        .select(`
+          *,
+          team_member_translations(*)
+        `)
+        .eq('is_active', true)
+        .order('display_order', { ascending: true });
+      
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  const getTeamMemberTranslation = (member: any) => {
+    const translation = member.team_member_translations?.find(
+      (t: any) => t.language === language
+    ) || member.team_member_translations?.[0];
+    return translation;
+  };
 
   const values = language === 'fr' ? [
     { icon: Shield, title: 'Intégrité', description: 'Nous opérons avec honnêteté et transparence dans toutes nos affaires.' },
@@ -310,47 +338,52 @@ const About = () => {
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {(language === 'fr' ? [
-              { name: 'Jean-Pierre Kasongo', role: 'Directeur Général', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face' },
-              { name: 'Marie Lubamba', role: 'Architecte en Chef', image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&h=300&fit=crop&crop=face' },
-              { name: 'Patrick Mwamba', role: 'Chef de Chantier', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face' },
-              { name: 'Sarah Mukendi', role: 'Responsable Projets', image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&h=300&fit=crop&crop=face' },
-            ] : [
-              { name: 'Jean-Pierre Kasongo', role: 'General Manager', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face' },
-              { name: 'Marie Lubamba', role: 'Chief Architect', image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&h=300&fit=crop&crop=face' },
-              { name: 'Patrick Mwamba', role: 'Site Manager', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face' },
-              { name: 'Sarah Mukendi', role: 'Project Manager', image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&h=300&fit=crop&crop=face' },
-            ]).map((member, index) => (
-              <div 
-                key={index} 
-                className="group animate-fade-in-up opacity-0"
-                style={{ animationDelay: `${0.15 * index}s` }}
-              >
-                <div className="relative overflow-hidden rounded-xl mb-4">
-                  <div className="aspect-square">
-                    <img 
-                      src={member.image} 
-                      alt={member.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <div className="flex justify-center gap-3">
-                      <div className="w-8 h-8 bg-primary-foreground/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-primary-foreground/40 transition-colors cursor-pointer">
-                        <Building className="w-4 h-4 text-primary-foreground" />
+            {teamMembers && teamMembers.length > 0 ? (
+              teamMembers.map((member, index) => {
+                const translation = getTeamMemberTranslation(member);
+                return (
+                  <div 
+                    key={member.id} 
+                    className="group animate-fade-in-up opacity-0"
+                    style={{ animationDelay: `${0.15 * index}s` }}
+                  >
+                    <div className="relative overflow-hidden rounded-xl mb-4">
+                      <div className="aspect-square">
+                        {member.image_url ? (
+                          <img 
+                            src={member.image_url} 
+                            alt={translation?.name || 'Team member'}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-muted flex items-center justify-center">
+                            <Users className="w-16 h-16 text-muted-foreground" />
+                          </div>
+                        )}
+                      </div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                        <div className="flex justify-center gap-3">
+                          <div className="w-8 h-8 bg-primary-foreground/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-primary-foreground/40 transition-colors cursor-pointer">
+                            <Building className="w-4 h-4 text-primary-foreground" />
+                          </div>
+                        </div>
                       </div>
                     </div>
+                    <div className="text-center">
+                      <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+                        {translation?.name || 'Team Member'}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">{translation?.role || ''}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="text-center">
-                  <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
-                    {member.name}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">{member.role}</p>
-                </div>
+                );
+              })
+            ) : (
+              <div className="col-span-full text-center py-8 text-muted-foreground">
+                {language === 'fr' ? 'Équipe à venir...' : 'Team coming soon...'}
               </div>
-            ))}
+            )}
           </div>
         </div>
       </section>
