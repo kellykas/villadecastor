@@ -1,3 +1,31 @@
+# Villa de Castor - Robots.txt
+# https://villadecastor.com
+
+User-agent: *
+Allow: /
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1
+
+# Disallow admin pages
+Disallow: /admin/
+Disallow: /auth
+
+# Allow important resources
+Allow: /assets/
+Allow: /*.js
+Allow: /*.css
+Allow: /*.png
+Allow: /*.jpg
+Allow: /*.jpeg
+Allow: /*.gif
+Allow: /*.svg
+Allow: /*.webp
+
+# Sitemap location
+Sitemap: https://villadecastor.com/sitemap.xml
+
+# Search engine specific rules
 User-agent: Googlebot
 Allow: /
 
@@ -10,5 +38,8 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
 Allow: /

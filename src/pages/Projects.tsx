@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { MapPin } from 'lucide-react';
 import MainLayout from '@/components/layout/MainLayout';
+import SEO from '@/components/SEO';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -64,6 +65,16 @@ const Projects = () => {
 
   return (
     <MainLayout>
+      <SEO 
+        title={language === 'fr' ? 'Nos Réalisations' : 'Our Projects'}
+        url="/projects"
+        description={language === 'fr' 
+          ? 'Découvrez nos projets de construction et rénovation réalisés à Kinshasa et Lubumbashi. Portfolio de travaux résidentiels et commerciaux.'
+          : 'Discover our construction and renovation projects in Kinshasa and Lubumbashi. Portfolio of residential and commercial works.'}
+        keywords={language === 'fr'
+          ? 'projets construction RDC, réalisations rénovation Kinshasa, portfolio bâtiment Lubumbashi'
+          : 'construction projects DRC, renovation works Kinshasa, building portfolio Lubumbashi'}
+      />
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 bg-secondary">
         <div className="container mx-auto px-4 text-center">

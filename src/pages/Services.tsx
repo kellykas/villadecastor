@@ -3,6 +3,7 @@ import { ArrowRight, Building2, Hammer, PaintBucket, Home as HomeIcon, Wrench, T
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import MainLayout from '@/components/layout/MainLayout';
+import SEO from '@/components/SEO';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -34,6 +35,16 @@ const Services = () => {
 
   return (
     <MainLayout>
+      <SEO 
+        title={language === 'fr' ? 'Nos Services' : 'Our Services'}
+        url="/services"
+        description={language === 'fr' 
+          ? 'Services de construction, rénovation, peinture et décoration intérieure en RDC. Travaux de qualité à Kinshasa et Lubumbashi.'
+          : 'Construction, renovation, painting and interior design services in DRC. Quality work in Kinshasa and Lubumbashi.'}
+        keywords={language === 'fr'
+          ? 'services construction RDC, rénovation Kinshasa, peinture Lubumbashi, décoration intérieure Congo'
+          : 'construction services DRC, renovation Kinshasa, painting Lubumbashi, interior design Congo'}
+      />
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 bg-secondary overflow-hidden">
         <div className="absolute inset-0 opacity-10">

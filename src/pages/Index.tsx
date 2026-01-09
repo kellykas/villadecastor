@@ -3,6 +3,7 @@ import { ArrowRight, Award, Clock, DollarSign, HeadphonesIcon, Building2, Hammer
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import MainLayout from '@/components/layout/MainLayout';
+import SEO from '@/components/SEO';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -78,6 +79,15 @@ const Index = () => {
 
   return (
     <MainLayout>
+      <SEO 
+        url="/"
+        description={language === 'fr' 
+          ? 'Villa de Castor - Entreprise de construction, rénovation et décoration intérieure en RDC. Services professionnels à Kinshasa et Lubumbashi. Devis gratuit.'
+          : 'Villa de Castor - Construction, renovation and interior design company in DRC. Professional services in Kinshasa and Lubumbashi. Free quote.'}
+        keywords={language === 'fr'
+          ? 'construction RDC, rénovation Kinshasa, décoration intérieure Congo, entreprise bâtiment Lubumbashi, Villa de Castor'
+          : 'construction DRC, renovation Kinshasa, interior design Congo, building company Lubumbashi, Villa de Castor'}
+      />
       {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center overflow-hidden">
         <div 

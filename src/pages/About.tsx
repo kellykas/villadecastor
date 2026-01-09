@@ -1,6 +1,7 @@
 import { Award, Target, Eye, Heart, Users, Building, Clock, Shield, MapPin, FileCheck, Home, HardHat, Hammer } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import MainLayout from '@/components/layout/MainLayout';
+import SEO from '@/components/SEO';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -73,6 +74,16 @@ const About = () => {
 
   return (
     <MainLayout>
+      <SEO 
+        title={language === 'fr' ? 'À Propos' : 'About Us'}
+        url="/about"
+        description={language === 'fr' 
+          ? 'Découvrez Villa de Castor, entreprise de construction et rénovation en RDC depuis 2014. Plus de 10 ans d\'expérience à Kinshasa et Lubumbashi.'
+          : 'Discover Villa de Castor, construction and renovation company in DRC since 2014. Over 10 years of experience in Kinshasa and Lubumbashi.'}
+        keywords={language === 'fr'
+          ? 'à propos Villa de Castor, histoire entreprise construction RDC, équipe construction Kinshasa'
+          : 'about Villa de Castor, construction company history DRC, construction team Kinshasa'}
+      />
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 bg-secondary overflow-hidden">
         <div className="absolute inset-0 opacity-10">
