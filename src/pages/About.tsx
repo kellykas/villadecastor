@@ -295,6 +295,66 @@ const About = () => {
         </div>
       </section>
 
+      {/* Team Members */}
+      <section className="py-16 md:py-24 bg-muted overflow-hidden">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 animate-fade-in opacity-0">
+              {language === 'fr' ? 'Notre Équipe' : 'Our Team'}
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto animate-fade-in opacity-0" style={{ animationDelay: '0.1s' }}>
+              {language === 'fr' 
+                ? 'Des professionnels passionnés et dévoués à la réussite de vos projets.'
+                : 'Passionate professionals dedicated to the success of your projects.'}
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {(language === 'fr' ? [
+              { name: 'Jean-Pierre Kasongo', role: 'Directeur Général', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face' },
+              { name: 'Marie Lubamba', role: 'Architecte en Chef', image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&h=300&fit=crop&crop=face' },
+              { name: 'Patrick Mwamba', role: 'Chef de Chantier', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face' },
+              { name: 'Sarah Mukendi', role: 'Responsable Projets', image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&h=300&fit=crop&crop=face' },
+            ] : [
+              { name: 'Jean-Pierre Kasongo', role: 'General Manager', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face' },
+              { name: 'Marie Lubamba', role: 'Chief Architect', image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&h=300&fit=crop&crop=face' },
+              { name: 'Patrick Mwamba', role: 'Site Manager', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face' },
+              { name: 'Sarah Mukendi', role: 'Project Manager', image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&h=300&fit=crop&crop=face' },
+            ]).map((member, index) => (
+              <div 
+                key={index} 
+                className="group animate-fade-in-up opacity-0"
+                style={{ animationDelay: `${0.15 * index}s` }}
+              >
+                <div className="relative overflow-hidden rounded-xl mb-4">
+                  <div className="aspect-square">
+                    <img 
+                      src={member.image} 
+                      alt={member.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                    <div className="flex justify-center gap-3">
+                      <div className="w-8 h-8 bg-primary-foreground/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-primary-foreground/40 transition-colors cursor-pointer">
+                        <Building className="w-4 h-4 text-primary-foreground" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-center">
+                  <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+                    {member.name}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">{member.role}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Commitments */}
       <section className="py-16 md:py-24 bg-secondary">
         <div className="container mx-auto px-4">
