@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { Resend } from "npm:resend@2.0.0";
+import { Resend } from "https://esm.sh/resend@2.0.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
@@ -12,6 +12,28 @@ const corsHeaders = {
 
 interface SendNewsletterRequest {
   campaignId: string;
+}
+
+// Simple in-memory rate limiting (resets on function cold start)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_MAX = 5; // Max 5 newsletter sends per hour per user
+const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour in milliseconds
+
+function checkRateLimit(userId: string): { allowed: boolean; remaining: number } {
+  const now = Date.now();
+  const userLimit = rateLimitMap.get(userId);
+
+  if (!userLimit || now > userLimit.resetTime) {
+    rateLimitMap.set(userId, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    return { allowed: true, remaining: RATE_LIMIT_MAX - 1 };
+  }
+
+  if (userLimit.count >= RATE_LIMIT_MAX) {
+    return { allowed: false, remaining: 0 };
+  }
+
+  userLimit.count++;
+  return { allowed: true, remaining: RATE_LIMIT_MAX - userLimit.count };
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -50,7 +72,7 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    const userId = claimsData.claims.sub;
+    const userId = claimsData.claims.sub as string;
 
     // Create service role client for admin check and operations
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
@@ -63,6 +85,23 @@ const handler = async (req: Request): Promise<Response> => {
       return new Response(
         JSON.stringify({ error: 'Unauthorized: Admin access required' }),
         { status: 403, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    // Check rate limit
+    const { allowed, remaining } = checkRateLimit(userId);
+    if (!allowed) {
+      return new Response(
+        JSON.stringify({ error: 'Rate limit exceeded. Maximum 5 newsletters per hour.' }),
+        { 
+          status: 429, 
+          headers: { 
+            "Content-Type": "application/json", 
+            "X-RateLimit-Remaining": "0",
+            "Retry-After": "3600",
+            ...corsHeaders 
+          } 
+        }
       );
     }
 
@@ -155,17 +194,22 @@ const handler = async (req: Request): Promise<Response> => {
       })
       .eq("id", campaignId);
 
-    console.log(`Newsletter sent to ${sentCount} subscribers`);
+    console.log(`Newsletter sent to ${sentCount} subscribers by admin ${userId}`);
 
     return new Response(
       JSON.stringify({ 
         success: true, 
         sentCount, 
+        rateLimitRemaining: remaining,
         errors: errors.length > 0 ? errors : undefined 
       }),
       {
         status: 200,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
+        headers: { 
+          "Content-Type": "application/json", 
+          "X-RateLimit-Remaining": String(remaining),
+          ...corsHeaders 
+        },
       }
     );
   } catch (error: any) {
