@@ -7,7 +7,8 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import { HardHat, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
+import logoMain from '@/assets/logo-main.png';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
@@ -116,8 +117,8 @@ const Auth = () => {
     <div className="min-h-screen flex items-center justify-center bg-muted p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="w-16 h-16 bg-primary rounded-lg flex items-center justify-center mx-auto mb-4">
-            <HardHat className="w-10 h-10 text-primary-foreground" />
+          <div className="w-20 h-20 mx-auto mb-4">
+            <img src={logoMain} alt="Villa de Castor" className="w-full h-full object-contain" />
           </div>
           <CardTitle className="text-2xl">Villa de Castor</CardTitle>
           <CardDescription>Admin Dashboard Access</CardDescription>

@@ -3,7 +3,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { 
-  HardHat, 
   LayoutDashboard, 
   Languages, 
   FileText, 
@@ -16,10 +15,13 @@ import {
   X,
   ChevronRight,
   Newspaper,
-  Users
+  Users,
+  UserCheck,
+  Send
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import logoMain from '@/assets/logo-main.png';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -64,6 +66,8 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
     { href: '/admin/projects', icon: FolderOpen, label: 'Projects' },
     { href: '/admin/team', icon: Users, label: 'Team Members' },
     { href: '/admin/blog', icon: Newspaper, label: 'Blog Posts' },
+    { href: '/admin/subscribers', icon: UserCheck, label: 'Subscribers' },
+    { href: '/admin/campaigns', icon: Send, label: 'Email Campaigns' },
     { href: '/admin/quotes', icon: MessageSquare, label: 'Quotes' },
     { href: '/admin/messages', icon: Mail, label: 'Messages' },
   ];
@@ -78,9 +82,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
       {/* Mobile Header */}
       <header className="lg:hidden sticky top-0 z-50 bg-card border-b border-border px-4 py-3 flex items-center justify-between">
         <Link to="/admin" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-            <HardHat className="w-5 h-5 text-primary-foreground" />
-          </div>
+          <img src={logoMain} alt="Villa de Castor" className="w-8 h-8 object-contain" />
           <span className="font-bold text-foreground">Admin</span>
         </Link>
         <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(!sidebarOpen)}>
@@ -96,10 +98,8 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
         )}>
           <div className="flex flex-col h-full">
             {/* Logo */}
-            <div className="hidden lg:flex items-center gap-2 p-4 border-b border-border">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <HardHat className="w-6 h-6 text-primary-foreground" />
-              </div>
+            <div className="hidden lg:flex items-center gap-3 p-4 border-b border-border">
+              <img src={logoMain} alt="Villa de Castor" className="w-10 h-10 object-contain" />
               <div>
                 <div className="font-bold text-foreground">Villa de Castor</div>
                 <div className="text-xs text-muted-foreground">Admin Panel</div>
