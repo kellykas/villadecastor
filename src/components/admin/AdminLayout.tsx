@@ -17,7 +17,8 @@ import {
   Newspaper,
   Users,
   UserCheck,
-  Send
+  Send,
+  Shield
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -70,6 +71,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
     { href: '/admin/campaigns', icon: Send, label: 'Email Campaigns' },
     { href: '/admin/quotes', icon: MessageSquare, label: 'Quotes' },
     { href: '/admin/messages', icon: Mail, label: 'Messages' },
+    { href: '/admin/users', icon: Shield, label: 'User Roles' },
   ];
 
   const isActive = (path: string) => {

@@ -24,6 +24,7 @@ import EmailSubscribers from "./pages/admin/EmailSubscribers";
 import EmailCampaigns from "./pages/admin/EmailCampaigns";
 import Quotes from "./pages/admin/Quotes";
 import Messages from "./pages/admin/Messages";
+import UserRoles from "./pages/admin/UserRoles";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +55,7 @@ const App = () => (
             <Route path="/admin/campaigns" element={<EmailCampaigns />} />
             <Route path="/admin/quotes" element={<Quotes />} />
             <Route path="/admin/messages" element={<Messages />} />
+            <Route path="/admin/users" element={<UserRoles />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
