@@ -20,6 +20,8 @@ import AdminServices from "./pages/admin/Services";
 import AdminProjects from "./pages/admin/Projects";
 import AdminBlogPosts from "./pages/admin/BlogPosts";
 import AdminTeamMembers from "./pages/admin/TeamMembers";
+import EmailSubscribers from "./pages/admin/EmailSubscribers";
+import EmailCampaigns from "./pages/admin/EmailCampaigns";
 import Quotes from "./pages/admin/Quotes";
 import Messages from "./pages/admin/Messages";
 
@@ -48,6 +50,8 @@ const App = () => (
             <Route path="/admin/projects" element={<AdminProjects />} />
             <Route path="/admin/blog" element={<AdminBlogPosts />} />
             <Route path="/admin/team" element={<AdminTeamMembers />} />
+            <Route path="/admin/subscribers" element={<EmailSubscribers />} />
+            <Route path="/admin/campaigns" element={<EmailCampaigns />} />
             <Route path="/admin/quotes" element={<Quotes />} />
             <Route path="/admin/messages" element={<Messages />} />
             <Route path="*" element={<NotFound />} />
