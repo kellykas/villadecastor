@@ -21,11 +21,60 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    // Extract and validate Authorization header
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return new Response(
+        JSON.stringify({ error: 'Missing authorization header' }),
+        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+    // Create client with user's auth token for validation
+    const supabaseAuth = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
+
+    // Verify JWT and get user claims
+    const token = authHeader.replace('Bearer ', '');
+    const { data: claimsData, error: claimsError } = await supabaseAuth.auth.getClaims(token);
+    
+    if (claimsError || !claimsData?.claims) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid authentication token' }),
+        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    const userId = claimsData.claims.sub;
+
+    // Create service role client for admin check and operations
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+    // Check if user is admin
+    const { data: isAdmin, error: roleError } = await supabase
+      .rpc('has_role', { _user_id: userId, _role: 'admin' });
+    
+    if (roleError || !isAdmin) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized: Admin access required' }),
+        { status: 403, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
     const { campaignId }: SendNewsletterRequest = await req.json();
+
+    // Validate campaignId
+    if (!campaignId || typeof campaignId !== 'string') {
+      return new Response(
+        JSON.stringify({ error: 'Invalid campaign ID' }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
 
     // Get the campaign
     const { data: campaign, error: campaignError } = await supabase

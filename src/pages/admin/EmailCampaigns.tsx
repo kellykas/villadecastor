@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Plus, Pencil, Trash2, Send, Eye, Mail, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+import DOMPurify from 'dompurify';
 
 const EmailCampaigns = () => {
   const queryClient = useQueryClient();
@@ -347,7 +348,12 @@ const EmailCampaigns = () => {
             <div className="border rounded-lg p-6 bg-background">
               <div 
                 className="prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={{ __html: previewCampaign?.content || '' }}
+                dangerouslySetInnerHTML={{ 
+                  __html: DOMPurify.sanitize(previewCampaign?.content || '', {
+                    ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'a', 'ul', 'ol', 'li', 'span', 'div', 'img', 'hr'],
+                    ALLOWED_ATTR: ['href', 'title', 'src', 'alt', 'style', 'class']
+                  })
+                }}
               />
             </div>
           </DialogContent>
