@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import MainLayout from '@/components/layout/MainLayout';
+import SEO from '@/components/SEO';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -67,6 +68,16 @@ const Blog = () => {
 
   return (
     <MainLayout>
+      <SEO 
+        title="Blog"
+        url="/blog"
+        description={language === 'fr' 
+          ? 'Blog Villa de Castor - Conseils, tendances et actualités de la construction et rénovation en RDC. Articles experts pour vos projets.'
+          : 'Villa de Castor Blog - Tips, trends and news from construction and renovation in DRC. Expert articles for your projects.'}
+        keywords={language === 'fr'
+          ? 'blog construction RDC, conseils rénovation Kinshasa, tendances bâtiment Congo'
+          : 'construction blog DRC, renovation tips Kinshasa, building trends Congo'}
+      />
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 bg-secondary overflow-hidden">
         <div className="absolute inset-0 opacity-10">

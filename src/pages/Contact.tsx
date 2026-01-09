@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import MainLayout from '@/components/layout/MainLayout';
+import SEO from '@/components/SEO';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -115,6 +116,16 @@ const Contact = () => {
 
   return (
     <MainLayout>
+      <SEO 
+        title={language === 'fr' ? 'Contact' : 'Contact Us'}
+        url="/contact"
+        description={language === 'fr' 
+          ? 'Contactez Villa de Castor pour vos projets de construction et rénovation en RDC. Adresse à Kinshasa Gombe, WhatsApp disponible.'
+          : 'Contact Villa de Castor for your construction and renovation projects in DRC. Address in Kinshasa Gombe, WhatsApp available.'}
+        keywords={language === 'fr'
+          ? 'contact Villa de Castor, adresse construction Kinshasa, téléphone rénovation RDC'
+          : 'contact Villa de Castor, construction address Kinshasa, renovation phone DRC'}
+      />
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 bg-secondary">
         <div className="container mx-auto px-4 text-center">

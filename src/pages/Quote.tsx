@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import MainLayout from '@/components/layout/MainLayout';
+import SEO from '@/components/SEO';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -128,8 +129,13 @@ const Quote = () => {
   };
 
   if (isSubmitted) {
-    return (
+      return (
       <MainLayout>
+        <SEO 
+          title={language === 'fr' ? 'Demande Envoyée' : 'Request Submitted'}
+          url="/quote"
+          noIndex={true}
+        />
         <section className="py-20 md:py-32 bg-background min-h-[60vh] flex items-center">
           <div className="container mx-auto px-4">
             <Card className="max-w-xl mx-auto border-0 bg-card">
@@ -163,6 +169,16 @@ const Quote = () => {
 
   return (
     <MainLayout>
+      <SEO 
+        title={language === 'fr' ? 'Demande de Devis' : 'Request a Quote'}
+        url="/quote"
+        description={language === 'fr' 
+          ? 'Demandez un devis gratuit pour vos projets de construction et rénovation en RDC. Réponse rapide garantie.'
+          : 'Request a free quote for your construction and renovation projects in DRC. Quick response guaranteed.'}
+        keywords={language === 'fr'
+          ? 'devis construction RDC, estimation rénovation Kinshasa, prix travaux Lubumbashi'
+          : 'construction quote DRC, renovation estimate Kinshasa, work prices Lubumbashi'}
+      />
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 bg-secondary">
         <div className="container mx-auto px-4 text-center">
