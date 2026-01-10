@@ -17,7 +17,7 @@ interface SEOProps {
   noIndex?: boolean;
 }
 
-const DEFAULT_IMAGE = 'https://storage.googleapis.com/gpt-engineer-file-uploads/hOGQsGVQ5OUqF2f4Fdp76uUzglu1/social-images/social-1767943987172-Villa de castor Logo brown1111.png';
+const DEFAULT_IMAGE = 'https://villadecastor.com/og-image.png';
 
 export const SEO = ({
   title,
