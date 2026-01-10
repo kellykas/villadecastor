@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import MainLayout from '@/components/layout/MainLayout';
 import SEO from '@/components/SEO';
+import ReadingProgress from '@/components/ReadingProgress';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -141,6 +142,7 @@ const BlogPost = () => {
 
   return (
     <MainLayout>
+      <ReadingProgress />
       <SEO 
         title={postTitle}
         description={postExcerpt}
