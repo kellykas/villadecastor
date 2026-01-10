@@ -99,15 +99,15 @@ const Blog = () => {
       </section>
 
       {/* Categories */}
-      <section className="py-8 bg-muted border-b border-border">
+      <section className="py-6 md:py-8 bg-muted border-b border-border">
         <div className="container mx-auto px-4">
-          <div className="flex flex-wrap gap-3 justify-center">
+          <div className="flex overflow-x-auto scrollbar-hide gap-2 md:gap-3 justify-start md:justify-center pb-2 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0">
             {categories.map((category, index) => (
               <Button
                 key={category.key}
                 variant={index === 0 ? 'default' : 'outline'}
                 size="sm"
-                className="rounded-full animate-fade-in opacity-0"
+                className="rounded-full animate-fade-in opacity-0 whitespace-nowrap shrink-0 text-xs md:text-sm px-3 md:px-4"
                 style={{ animationDelay: `${0.1 * index}s` }}
               >
                 {category.label}
