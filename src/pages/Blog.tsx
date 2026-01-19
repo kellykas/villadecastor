@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Calendar, Clock, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,7 @@ import { fr, enUS } from 'date-fns/locale';
 
 const Blog = () => {
   const { language } = useLanguage();
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   const { data: blogPosts, isLoading } = useQuery({
     queryKey: ['blog-posts', language],
@@ -56,8 +58,13 @@ const Blog = () => {
         { key: 'projects', label: 'Projects' }
       ];
 
-  const featuredPost = blogPosts?.find(post => post.is_featured);
-  const regularPosts = blogPosts?.filter(post => !post.is_featured) || [];
+  // Filter posts by category
+  const filteredPosts = selectedCategory === 'all' 
+    ? blogPosts 
+    : blogPosts?.filter(post => post.category?.toLowerCase() === selectedCategory.toLowerCase());
+
+  const featuredPost = filteredPosts?.find(post => post.is_featured);
+  const regularPosts = filteredPosts?.filter(post => !post.is_featured) || [];
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return '';
@@ -105,8 +112,9 @@ const Blog = () => {
             {categories.map((category, index) => (
               <Button
                 key={category.key}
-                variant={index === 0 ? 'default' : 'outline'}
+                variant={selectedCategory === category.key ? 'default' : 'outline'}
                 size="sm"
+                onClick={() => setSelectedCategory(category.key)}
                 className="rounded-full animate-fade-in opacity-0 whitespace-nowrap shrink-0 text-xs md:text-sm px-3 md:px-4"
                 style={{ animationDelay: `${0.1 * index}s` }}
               >

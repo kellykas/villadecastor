@@ -1,11 +1,18 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, Facebook, Instagram } from 'lucide-react';
+import { Mail, Phone, MapPin, Facebook, Instagram, Send, Loader2 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { COMPANY_NAME, WHATSAPP_DISPLAY, COMPANY_EMAIL, COMPANY_ADDRESS } from '@/lib/constants';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import logo from '@/assets/logo.png';
 
 const Footer = () => {
   const { t, language } = useLanguage();
+  const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const quickLinks = [
     { href: '/', label: t('nav.home') },
@@ -16,6 +23,39 @@ const Footer = () => {
     { href: '/quote', label: t('nav.quote') },
     { href: '/contact', label: t('nav.contact') },
   ];
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email) {
+      toast.error(language === 'fr' ? 'Veuillez entrer votre email' : 'Please enter your email');
+      return;
+    }
+
+    setIsLoading(true);
+    
+    try {
+      const { error } = await supabase
+        .from('email_subscribers')
+        .insert([{ email, language }]);
+
+      if (error) {
+        if (error.code === '23505') {
+          toast.error(language === 'fr' ? 'Cet email est déjà inscrit' : 'This email is already subscribed');
+        } else {
+          throw error;
+        }
+      } else {
+        toast.success(language === 'fr' ? 'Inscription réussie!' : 'Successfully subscribed!');
+        setEmail('');
+      }
+    } catch (error) {
+      console.error('Newsletter subscription error:', error);
+      toast.error(language === 'fr' ? 'Erreur lors de l\'inscription' : 'Error subscribing');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <footer className="bg-primary text-primary-foreground">
@@ -84,23 +124,52 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Hours */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">{t('contact.hours')}</h3>
-            <ul className="space-y-2 text-sm text-primary-foreground/80">
-              <li className="flex justify-between">
-                <span>{language === 'fr' ? 'Lun - Ven' : 'Mon - Fri'}</span>
-                <span>8:00 - 18:00</span>
-              </li>
-              <li className="flex justify-between">
-                <span>{language === 'fr' ? 'Samedi' : 'Saturday'}</span>
-                <span>9:00 - 14:00</span>
-              </li>
-              <li className="flex justify-between">
-                <span>{language === 'fr' ? 'Dimanche' : 'Sunday'}</span>
-                <span>{language === 'fr' ? 'Fermé' : 'Closed'}</span>
-              </li>
-            </ul>
+          {/* Newsletter & Hours */}
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold mb-3">
+                {language === 'fr' ? 'Newsletter' : 'Newsletter'}
+              </h3>
+              <p className="text-sm text-primary-foreground/80 mb-3">
+                {language === 'fr' 
+                  ? 'Recevez nos dernières actualités' 
+                  : 'Get our latest news'}
+              </p>
+              <form onSubmit={handleNewsletterSubmit} className="flex gap-2">
+                <Input
+                  type="email"
+                  placeholder={language === 'fr' ? 'Votre email' : 'Your email'}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 text-sm h-9"
+                />
+                <Button 
+                  type="submit" 
+                  size="sm"
+                  disabled={isLoading}
+                  className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 h-9 px-3"
+                >
+                  {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                </Button>
+              </form>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-3">{t('contact.hours')}</h3>
+              <ul className="space-y-1.5 text-sm text-primary-foreground/80">
+                <li className="flex justify-between">
+                  <span>{language === 'fr' ? 'Lun - Ven' : 'Mon - Fri'}</span>
+                  <span>8:00 - 18:00</span>
+                </li>
+                <li className="flex justify-between">
+                  <span>{language === 'fr' ? 'Samedi' : 'Saturday'}</span>
+                  <span>9:00 - 14:00</span>
+                </li>
+                <li className="flex justify-between">
+                  <span>{language === 'fr' ? 'Dimanche' : 'Sunday'}</span>
+                  <span>{language === 'fr' ? 'Fermé' : 'Closed'}</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
 
