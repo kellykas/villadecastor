@@ -33,7 +33,7 @@ const Footer = () => {
               <a href="https://www.facebook.com/share/16pXwMdXkP/" target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-primary-foreground/10 rounded-full flex items-center justify-center hover:bg-primary-foreground hover:text-primary transition-colors">
                 <Facebook className="w-4 h-4" />
               </a>
-              <a href="#" className="w-9 h-9 bg-primary-foreground/10 rounded-full flex items-center justify-center hover:bg-primary-foreground hover:text-primary transition-colors">
+              <a href="https://www.instagram.com/villa_de_castor?utm_source=qr&igsh=c3l0ZzFjM29rZmRw" target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-primary-foreground/10 rounded-full flex items-center justify-center hover:bg-primary-foreground hover:text-primary transition-colors">
                 <Instagram className="w-4 h-4" />
               </a>
               <a href="https://www.tiktok.com/@tokos092?_r=1&_t=ZM-92vM9HEdLvY" target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-primary-foreground/10 rounded-full flex items-center justify-center hover:bg-primary-foreground hover:text-primary transition-colors">
