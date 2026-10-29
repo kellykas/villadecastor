@@ -144,8 +144,11 @@ const About = () => {
                   </span>
                 </div>
                 <div className="pl-8 text-sm text-muted-foreground">
-                  <p>RCCM: XX-XXXXX-XXXXX-X</p>
-                  <p>ID NAT: X-XXX-XXXXX-X</p>
+                  <p>RCCM: CD/KNG/RCCM/26-B-00192</p>
+                  <p>ID NAT: 01-F4200-N91465j</p>
+                  <p>{language === 'fr' ? "Numéro d'impôts" : 'Tax number'}: A2604380Q</p>
+                  <p>{language === 'fr' ? 'Numéro INPP' : 'INPP number'}: 170011,00</p>
+                  <p>{language === 'fr' ? 'Numéro ONEM' : 'ONEM number'}: 020666A26</p>
                 </div>
               </div>
             </div>
