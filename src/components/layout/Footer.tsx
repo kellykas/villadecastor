@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Facebook, Instagram, Send, Loader2 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { COMPANY_NAME, WHATSAPP_DISPLAY, COMPANY_EMAIL, COMPANY_ADDRESS } from '@/lib/constants';
+import { COMPANY_NAME, WHATSAPP_DISPLAY, COMPANY_EMAIL, COMPANY_ADDRESS, SOCIAL_LINKS } from '@/lib/constants';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -70,13 +70,13 @@ const Footer = () => {
               {t('footer.description')}
             </p>
             <div className="flex gap-3">
-              <a href="https://www.facebook.com/share/16pXwMdXkP/" target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-primary-foreground/10 rounded-full flex items-center justify-center hover:bg-primary-foreground hover:text-primary transition-colors">
+              <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-primary-foreground/10 rounded-full flex items-center justify-center hover:bg-primary-foreground hover:text-primary transition-colors">
                 <Facebook className="w-4 h-4" />
               </a>
-              <a href="https://www.instagram.com/villa_de_castor?utm_source=qr&igsh=c3l0ZzFjM29rZmRw" target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-primary-foreground/10 rounded-full flex items-center justify-center hover:bg-primary-foreground hover:text-primary transition-colors">
+              <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-primary-foreground/10 rounded-full flex items-center justify-center hover:bg-primary-foreground hover:text-primary transition-colors">
                 <Instagram className="w-4 h-4" />
               </a>
-              <a href="https://www.tiktok.com/@tokos092?_r=1&_t=ZM-92vM9HEdLvY" target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-primary-foreground/10 rounded-full flex items-center justify-center hover:bg-primary-foreground hover:text-primary transition-colors">
+              <a href={SOCIAL_LINKS.tiktok} target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-primary-foreground/10 rounded-full flex items-center justify-center hover:bg-primary-foreground hover:text-primary transition-colors">
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
                 </svg>

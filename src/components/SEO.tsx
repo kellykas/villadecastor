@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { COMPANY_NAME, COMPANY_ADDRESS, COMPANY_PHONE, COMPANY_EMAIL } from '@/lib/constants';
+import { COMPANY_NAME, COMPANY_ADDRESS, COMPANY_PHONE, COMPANY_EMAIL, SOCIAL_PROFILE_URLS } from '@/lib/constants';
 
 interface SEOProps {
   title?: string;
@@ -53,7 +53,7 @@ export const SEO = ({
       { '@type': 'City', name: 'Kinshasa' },
       { '@type': 'City', name: 'Lubumbashi' },
     ],
-    sameAs: [],
+    sameAs: SOCIAL_PROFILE_URLS,
   };
 
   // LocalBusiness JSON-LD for construction company
@@ -77,6 +77,7 @@ export const SEO = ({
       longitude: 15.3125,
     },
     priceRange: '$$',
+    sameAs: SOCIAL_PROFILE_URLS,
     openingHoursSpecification: [
       {
         '@type': 'OpeningHoursSpecification',
@@ -190,7 +191,7 @@ export const SEO = ({
       <meta property="og:description" content={description} />
       <meta property="og:image" content={image} />
       <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="630" />
+      <meta property="og:image:height" content="640" />
       <meta property="og:site_name" content={COMPANY_NAME} />
       <meta property="og:locale" content="fr_CD" />
       <meta property="og:locale:alternate" content="en_US" />
